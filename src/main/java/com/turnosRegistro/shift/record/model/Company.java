@@ -8,6 +8,8 @@ import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 
 @Data @Entity
 @AllArgsConstructor
@@ -21,10 +23,12 @@ public class Company {
     @JoinColumn(name = "user_id")
     private User userCompany;
     private String name;
-    private Collection<PhoneNumber> phoneNumber;
+    @OneToMany(cascade = CascadeType.ALL)
+    private Collection<PhoneNumber> phoneNumber = new HashSet<>();;
     private String description;
     private String email;
-    private Collection<Address> address;
+    @OneToMany(cascade = CascadeType.ALL)
+    private Collection<Address> address = new HashSet<>();
     private String logoImage;
     private String CBU;
     private Boolean deleted = Boolean.FALSE;

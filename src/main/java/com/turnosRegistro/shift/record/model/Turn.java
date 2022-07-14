@@ -1,6 +1,5 @@
 package com.turnosRegistro.shift.record.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,10 +15,9 @@ public class Turn {
     private Long id;
     @OneToMany
     private Collection<Reserve> reserves;
+    @OneToMany
     private Collection<Company> companies;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:MM:ss")
     private LocalDateTime startTurn;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime finishTurn;
     private Integer numberOfPlaces;
     private Boolean successfulBooking = Boolean.FALSE;

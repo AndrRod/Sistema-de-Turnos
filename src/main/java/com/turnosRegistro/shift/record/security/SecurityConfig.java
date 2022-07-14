@@ -13,7 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
-
+ 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -26,12 +26,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
         http.cors();
-        http.authorizeRequests().antMatchers("/auth/login", "/auth/register", "/auth/refresh");
-        http.authorizeRequests().anyRequest().permitAll();
+//        http.authorizeRequests().antMatchers("/auth/login", "/auth/register");
+//        http.authorizeRequests().anyRequest().permitAll();
         http.sessionManagement().sessionCreationPolicy(STATELESS);
         http.addFilterBefore(new ConfigAutorizationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
-    @Bean
+//    @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
