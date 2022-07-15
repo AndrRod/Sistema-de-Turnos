@@ -23,7 +23,7 @@ public class User {
     private String email;
     private String password;
     private String phoneNumber;
-    private String fistName;
+    private String firstName;
     private String LastName;
     @CreationTimestamp
     private LocalDateTime creationDate;

@@ -1,0 +1,160 @@
+package com.turnosRegistro.shift.record.service.ServiceImpl;
+
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.turnosRegistro.shift.record.config.MessageHandler;
+import com.turnosRegistro.shift.record.dto.RefreshTokenForm;
+import com.turnosRegistro.shift.record.dto.UserDto;
+import com.turnosRegistro.shift.record.dto.UserLoginResponse;
+import com.turnosRegistro.shift.record.dto.mapper.UserMapper;
+import com.turnosRegistro.shift.record.exception.*;
+import com.turnosRegistro.shift.record.model.User;
+import com.turnosRegistro.shift.record.repository.UserRepository;
+import com.turnosRegistro.shift.record.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.http.HttpStatus.FORBIDDEN;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
+@Service
+public class UserServiceImpl implements UserService {
+    private static final int SIZE_PAGE = 10;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private UserMapper userMapper;
+    @Autowired
+    private MessageHandler messageHandler;
+    @Autowired
+    private PaginationMessage paginationMessage;
+    @Autowired
+    private AuthenticationManager authenticationManager;
+    @Override
+    public UserDto createUser(UserDto userDto) {
+        return userMapper.entityToDto(userRepository.save(userMapper.entityCreateFromDto(userDto)));
+    }
+    @Override
+    public UserDto updateUser(Long idUser, UserDto userDto) {
+        return userMapper.updateEntityFromDto(findUserEntityById(idUser), userDto);
+    }
+
+    @Override
+    public User findUserEntityById(Long id) {
+        return userRepository.findById(id).orElseThrow(()-> new NotFoundException(messageHandler.message("not.found", " id: " + id)));
+    }
+
+    @Override
+    public UserDto findUserDtoById(Long id) {
+        return userMapper.entityToDto(findUserEntityById(id));
+    }
+
+    @Override
+    public String deleteUserById(Long id) {
+        userRepository.delete(findUserEntityById(id));
+        return messageHandler.message("delete", null);
+    }
+
+    @Override
+    public MessagePagination findUsersDtoPagination(int page, HttpServletRequest request) {
+        Page<User> userPage = userRepository.findAll(PageRequest.of(page, SIZE_PAGE));
+        return paginationMessage.message(userPage, userMapper.ListDtoFromEntities(userPage.getContent()), request);
+    }
+
+    @Override
+    public Authentication authenticationFilter(String email, String password) throws AuthenticationException {
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email, password);
+        Authentication autenticacionFilter = authenticationManager.authenticate(authenticationToken);
+        return autenticacionFilter;
+    }
+
+    @Override
+    public UserLoginResponse userLogin(String email, String password, HttpServletRequest request) {
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        User user = findUserByEmail(email);
+        if(password == null) throw new BadRequestException(messageHandler.message("password.error",null));
+        if(!passwordEncoder.matches(password, user.getPassword())) throw new NotFoundException(messageHandler.message("password.error",null));
+        org.springframework.security.core.userdetails.User userAut = (org.springframework.security.core.userdetails.User) authenticationFilter(email, password).getPrincipal();
+        Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
+        String access_token = JWT.create()
+                .withSubject(userAut.getUsername())
+                .withExpiresAt(new Date(System.currentTimeMillis() + 30 * 60 * 1000))
+                .withIssuer(request.getRequestURL().toString())
+                .withClaim("role",userAut.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
+                .sign(algorithm);
+        String update_token = JWT.create()
+                .withSubject(user.getEmail())
+                .withExpiresAt(new Date(System.currentTimeMillis() + 30 * 60 * 1000))
+                .withIssuer(request.getRequestURL().toString())
+                .sign(algorithm);
+        return new UserLoginResponse(user.getEmail(), user.getRole(),  access_token,  update_token);
+    }
+
+    @Override
+    public void refreshToken(RefreshTokenForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        if(form.getRefresh_token() == null || !form.getRefresh_token().startsWith("Bearer ")) throw new BadRequestException(messageHandler.message("token.refresh.error", null));
+        try {
+            String refresh_token = form.getRefresh_token().substring("Bearer ".length());
+            Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
+            JWTVerifier verifier = JWT.require(algorithm).build();
+            DecodedJWT decodedJWT = verifier.verify(refresh_token);
+            String email = decodedJWT.getSubject();
+            User user = findUserByEmail(email);
+            String acceso_token = JWT.create()
+                    .withSubject(user.getEmail())
+                    .withExpiresAt(new Date(System.currentTimeMillis() + 20 * 60 * 1000)) // 10 minutos
+                    .withIssuer(request.getRequestURL().toString())
+                    .withClaim("role", Optional.ofNullable(user.getRole().getAuthority()).stream().collect(Collectors.toList()))
+                    .sign(algorithm);
+            response.setContentType(APPLICATION_JSON_VALUE);
+            new ObjectMapper().writeValue(response.getOutputStream(),  new HashMap<>(){{put("message", "the user " + user.getEmail()+ " refresh the token succesfully"); put("access_token", acceso_token); put("update_token", refresh_token);}});
+        }catch (Exception exception){
+            response.setStatus(FORBIDDEN.value());
+            response.setContentType(APPLICATION_JSON_VALUE);
+            new ObjectMapper().writeValue(response.getOutputStream(), new MessageInfo(exception.getMessage(), 403, request.getRequestURI()));
+        }
+
+    }
+    public User findUserByEmail(String email) {
+        return Optional.ofNullable(userRepository.findByEmail(email)).orElseThrow(() -> new NotFoundException(messageHandler.message("not.found", " by email: " + email)));
+    }
+
+    @Override
+    public User findUserLogedByEmail(HttpServletRequest request) {
+        String email = emailUserLoged(request);
+        return findUserByEmail(email);
+    }
+
+    @Override
+    public String emailUserLoged(HttpServletRequest request) {
+        String autorizacionHeader = request.getHeader(AUTHORIZATION);
+        if(autorizacionHeader==null || !autorizacionHeader.startsWith("Bearer ")) throw new NotFoundException(messageHandler.message("not.login", null));
+        String token = autorizacionHeader.substring("Bearer ".length());
+        Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
+        JWTVerifier verifier = JWT.require(algorithm).build();
+        DecodedJWT decodedJWT = verifier.verify(token);
+        return decodedJWT.getSubject();
+    }
+}
