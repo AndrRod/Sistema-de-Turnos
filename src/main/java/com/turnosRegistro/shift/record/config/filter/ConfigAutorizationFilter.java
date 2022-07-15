@@ -1,4 +1,4 @@
-package com.turnosRegistro.shift.record.filter;
+package com.turnosRegistro.shift.record.config.filter;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
@@ -34,7 +34,6 @@ public class ConfigAutorizationFilter extends OncePerRequestFilter {
         if(listPaths.contains(request.getServletPath())){
             filterChain.doFilter(request, response);
         }else{
-
             String autorizacionHeader = request.getHeader(AUTHORIZATION);
             if(autorizacionHeader != null && autorizacionHeader.startsWith("Bearer ")) {
                 try {
@@ -59,7 +58,7 @@ public class ConfigAutorizationFilter extends OncePerRequestFilter {
             }else {
                 response.setStatus(UNAUTHORIZED.value());
                 response.setContentType(APPLICATION_JSON_VALUE);
-                new ObjectMapper().writeValue(response.getOutputStream(), new MessageInfo("The resource cannot be accessed, because you arn't logged in or you don't hase use the token.", 401, request.getRequestURI()));
+                new ObjectMapper().writeValue(response.getOutputStream(), new MessageInfo("You are not login or your session was finish", 401, request.getRequestURI()));
             }
         }
     }

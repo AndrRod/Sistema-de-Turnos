@@ -39,11 +39,8 @@ public class UserMapper {
                 user.getRole(),
                 user.getReserveFavorite());
     }
-    public UserDto updateEntityFromDto(User user, UserDto userDto){
+    public User updateEntityFromDto(User user, UserDto userDto){
         Optional.of(user).ifPresent((u)->{
-            userDto.setCreationDate(null);
-            userDto.setRole(null);
-            userDto.setReserveFavorite(null);
             if(userDto.getFirstName() != null) u.setFirstName(userDto.getFirstName());
             if(userDto.getLastName() !=null) u.setLastName(userDto.getLastName());
             if(userDto.getEmail() !=null) u.setEmail(userDto.getEmail());
@@ -51,7 +48,7 @@ public class UserMapper {
             if(userDto.getPhoneNumber() != null) u.setPhoneNumber(userDto.getPhoneNumber());
             if(userDto.getReserveFavorite() !=null) u.setReserveFavorite(userDto.getReserveFavorite());
         });
-        return entityToDto(user);
+        return user;
     }
     public List<Object> ListDtoFromEntities(List<User> users){
         return users.stream().map(this::entityToDto).collect(Collectors.toList());

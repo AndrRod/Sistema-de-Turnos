@@ -10,19 +10,24 @@ import com.turnosRegistro.shift.record.dto.RefreshTokenForm;
 import com.turnosRegistro.shift.record.dto.UserDto;
 import com.turnosRegistro.shift.record.dto.UserLoginResponse;
 import com.turnosRegistro.shift.record.dto.mapper.UserMapper;
+import com.turnosRegistro.shift.record.enums.Role;
 import com.turnosRegistro.shift.record.exception.*;
 import com.turnosRegistro.shift.record.model.User;
 import com.turnosRegistro.shift.record.repository.UserRepository;
 import com.turnosRegistro.shift.record.service.UserService;
+import io.vavr.control.Try;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -30,9 +35,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -40,7 +43,7 @@ import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserDetailsService {
     private static final int SIZE_PAGE = 10;
     @Autowired
     private UserRepository userRepository;
@@ -58,12 +61,13 @@ public class UserServiceImpl implements UserService {
     }
     @Override
     public UserDto updateUser(Long idUser, UserDto userDto) {
-        return userMapper.updateEntityFromDto(findUserEntityById(idUser), userDto);
+        User user = userMapper.updateEntityFromDto(findUserEntityById(idUser), userDto);
+        return userMapper.entityToDto(userRepository.save(user));
     }
 
     @Override
     public User findUserEntityById(Long id) {
-        return userRepository.findById(id).orElseThrow(()-> new NotFoundException(messageHandler.message("not.found", " id: " + id)));
+        return userRepository.findById(id).orElseThrow(()-> new NotFoundException(messageHandler.message("not.found", "id: " + id)));
     }
 
     @Override
@@ -78,9 +82,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public MessagePagination findUsersDtoPagination(int page, HttpServletRequest request) {
+    public MessagePagination findUsersDtoPagination(int page) {
         Page<User> userPage = userRepository.findAll(PageRequest.of(page, SIZE_PAGE));
-        return paginationMessage.message(userPage, userMapper.ListDtoFromEntities(userPage.getContent()), request);
+        return paginationMessage.message(userPage, userMapper.ListDtoFromEntities(userPage.getContent()));
     }
 
     @Override
@@ -89,13 +93,18 @@ public class UserServiceImpl implements UserService {
         Authentication autenticacionFilter = authenticationManager.authenticate(authenticationToken);
         return autenticacionFilter;
     }
-
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user = findUserByEmail(email);
+        Collection<SimpleGrantedAuthority> authorizations = Collections.singleton(new SimpleGrantedAuthority(user.getRole().getAuthority()));
+        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), authorizations);
+    }
     @Override
     public UserLoginResponse userLogin(String email, String password, HttpServletRequest request) {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         User user = findUserByEmail(email);
         if(password == null) throw new BadRequestException(messageHandler.message("password.error",null));
-        if(!passwordEncoder.matches(password, user.getPassword())) throw new NotFoundException(messageHandler.message("password.error",null));
+        if(!passwordEncoder.matches(password, user.getPassword())) throw new BadRequestException(messageHandler.message("password.error",null));
         org.springframework.security.core.userdetails.User userAut = (org.springframework.security.core.userdetails.User) authenticationFilter(email, password).getPrincipal();
         Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
         String access_token = JWT.create()
@@ -124,7 +133,7 @@ public class UserServiceImpl implements UserService {
             User user = findUserByEmail(email);
             String acceso_token = JWT.create()
                     .withSubject(user.getEmail())
-                    .withExpiresAt(new Date(System.currentTimeMillis() + 20 * 60 * 1000)) // 10 minutos
+                    .withExpiresAt(new Date(System.currentTimeMillis() + 20 * 60 * 1000))
                     .withIssuer(request.getRequestURL().toString())
                     .withClaim("role", Optional.ofNullable(user.getRole().getAuthority()).stream().collect(Collectors.toList()))
                     .sign(algorithm);
@@ -138,7 +147,7 @@ public class UserServiceImpl implements UserService {
 
     }
     public User findUserByEmail(String email) {
-        return Optional.ofNullable(userRepository.findByEmail(email)).orElseThrow(() -> new NotFoundException(messageHandler.message("not.found", " by email: " + email)));
+        return Optional.ofNullable(userRepository.findByEmail(email)).orElseThrow(() -> new NotFoundException(messageHandler.message("not.found", "by email: " + email)));
     }
 
     @Override
@@ -156,5 +165,13 @@ public class UserServiceImpl implements UserService {
         JWTVerifier verifier = JWT.require(algorithm).build();
         DecodedJWT decodedJWT = verifier.verify(token);
         return decodedJWT.getSubject();
+    }
+
+    @Override
+    public String updateUserRol(Long idUser, String roleName) {
+        User user = findUserEntityById(idUser);
+        Try.of(() -> {user.setRole(Role.valueOf(roleName)); return null;
+        }).onFailure(e -> {throw new NotFoundException(messageHandler.message("not.found", " the role: " + roleName));});
+        return messageHandler.message("update.success", null);
     }
 }

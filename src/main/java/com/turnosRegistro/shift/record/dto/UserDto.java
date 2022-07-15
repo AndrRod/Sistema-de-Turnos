@@ -6,25 +6,28 @@ import com.turnosRegistro.shift.record.model.Reserve;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
+
+import javax.persistence.Column;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.Collection;
 
-@Getter
-@Setter
+@Getter @Setter @ToString
 @AllArgsConstructor
 public class UserDto {
     private Long id;
-    @NotBlank(message = "can´t be empty or null")
+    @Email(regexp = "^[\\w!#$%&'+/=?`{|}~^-]+(?:\\.[\\w!#$%&'+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$", message="Email format error")
     private String email;
-    @NotBlank(message = "can´t be empty or null")
+    @Size(min = 8, message = "The password must be at least 8 characters")
     private String password;
-    @NotBlank(message = "can´t be empty or null")
     private String phoneNumber;
     private String firstName;
     private String LastName;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime creationDate;
-    private Role role;
+    private Role role = Role.CLIENT;
     private Collection<Reserve> reserveFavorite;
 }

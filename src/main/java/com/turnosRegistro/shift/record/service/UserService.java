@@ -18,10 +18,11 @@ public interface UserService {
     User findUserEntityById(Long id);
     UserDto findUserDtoById(Long id);
     String deleteUserById(Long id);
-    MessagePagination findUsersDtoPagination(int page, HttpServletRequest request);
+    MessagePagination findUsersDtoPagination(int page);
     Authentication authenticationFilter(String email, String password) throws AuthenticationException;
     UserLoginResponse userLogin(String email, String password, HttpServletRequest request);
     void refreshToken(RefreshTokenForm form, HttpServletRequest request, HttpServletResponse response) throws IOException;
     User findUserLogedByEmail(HttpServletRequest request);
     String emailUserLoged(HttpServletRequest request);
+    String updateUserRol(Long idUser, String roleName);
 }

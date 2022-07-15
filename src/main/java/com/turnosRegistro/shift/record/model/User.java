@@ -9,6 +9,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.util.Collection;
 
@@ -20,8 +21,12 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotBlank(message = "can´t be empty or null")
+    @Column(unique = true)
     private String email;
+    @NotBlank(message = "can´t be empty or null")
     private String password;
+    @NotBlank(message = "can´t be empty or null")
     private String phoneNumber;
     private String firstName;
     private String LastName;

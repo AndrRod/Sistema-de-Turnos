@@ -14,8 +14,7 @@ import java.util.List;
 public class PaginationMessage {
     @Autowired
     private MessageHandler messageHandler;
-    public MessagePagination message(Page page, List<Object> dtoPageList, HttpServletRequest request){
-        String path = request.getRequestURI();
+    public MessagePagination message(Page page, List<Object> dtoPageList){
         List <Object> content = dtoPageList;
         String nextPath = null;
         String prevPath = null;
