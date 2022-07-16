@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 @Data @Entity @AllArgsConstructor @NoArgsConstructor
 public class Reserve {
@@ -12,11 +13,14 @@ public class Reserve {
     private Long id;
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @NotBlank(message = "can't be null")
     private User user;
     @ManyToOne
     @JoinColumn(name = "company_id")
+    @NotBlank(message = "can't be null")
     private Company company;
     @ManyToOne
     @JoinColumn(name = "turn_id")
+    @NotBlank(message = "can't be null")
     private Turn turn;
 }

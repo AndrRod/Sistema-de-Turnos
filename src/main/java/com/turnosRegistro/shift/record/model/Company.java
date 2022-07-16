@@ -7,6 +7,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -23,14 +24,17 @@ public class Company {
     @JoinColumn(name = "user_id")
     private User userCompany;
     private String name;
-    @OneToMany(cascade = CascadeType.ALL)
-    private Collection<PhoneNumber> phoneNumber = new HashSet<>();;
+    @NotBlank(message = "can't be null")
+    private String phoneNumber;
     private String description;
+    @NotBlank(message = "can't be null")
     private String email;
-    @OneToMany(cascade = CascadeType.ALL)
-    private Collection<Address> address = new HashSet<>();
+    private String address;
     private String logoImage;
+    @NotBlank(message = "can't be null")
     private String CBU;
     private Boolean deleted = Boolean.FALSE;
+    @OneToMany(cascade = CascadeType.ALL)
+    private Collection<Turn> turn = new HashSet<>();
 }
 

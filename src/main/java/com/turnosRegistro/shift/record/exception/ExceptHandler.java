@@ -35,4 +35,8 @@ public class ExceptHandler {
     public ResponseEntity<MessageInfo> badRequestException(BadRequestException ex, HttpServletRequest request){
         return ResponseEntity.badRequest().body(new MessageInfo(ex.getMessage(), HttpStatus.BAD_REQUEST.value(), request.getRequestURL().toString()));
     }
+    @ExceptionHandler({NotFoundException.class})
+    public ResponseEntity<MessageInfo> notFoundException(NotFoundException ex, HttpServletRequest request){
+        return ResponseEntity.badRequest().body(new MessageInfo(ex.getMessage(), HttpStatus.BAD_REQUEST.value(), request.getRequestURL().toString()));
+    }
 }

@@ -3,6 +3,7 @@ package com.turnosRegistro.shift.record.service;
 import com.turnosRegistro.shift.record.dto.RefreshTokenForm;
 import com.turnosRegistro.shift.record.dto.UserDto;
 import com.turnosRegistro.shift.record.dto.UserLoginResponse;
+import com.turnosRegistro.shift.record.exception.MessageInfo;
 import com.turnosRegistro.shift.record.exception.MessagePagination;
 import com.turnosRegistro.shift.record.model.User;
 import org.springframework.security.core.Authentication;
@@ -17,7 +18,7 @@ public interface UserService {
     UserDto updateUser(Long idUser, UserDto userDto);
     User findUserEntityById(Long id);
     UserDto findUserDtoById(Long id);
-    String deleteUserById(Long id);
+    MessageInfo deleteUserById(Long id, HttpServletRequest request);
     MessagePagination findUsersDtoPagination(int page);
     Authentication authenticationFilter(String email, String password) throws AuthenticationException;
     UserLoginResponse userLogin(String email, String password, HttpServletRequest request);

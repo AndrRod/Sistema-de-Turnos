@@ -19,6 +19,7 @@ import io.vavr.control.Try;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -76,9 +77,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public String deleteUserById(Long id) {
-        userRepository.delete(findUserEntityById(id));
-        return messageHandler.message("delete", null);
+    public MessageInfo deleteUserById(Long id, HttpServletRequest request) {
+        User user = findUserEntityById(id);
+        userRepository.delete(user);
+        return new MessageInfo(messageHandler.message("delete", "the user: " + user.getEmail()), HttpStatus.OK.value(), request.getRequestURL().toString());
     }
 
     @Override
@@ -123,7 +125,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public void refreshToken(RefreshTokenForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
-        if(form.getRefresh_token() == null || !form.getRefresh_token().startsWith("Bearer ")) throw new BadRequestException(messageHandler.message("token.refresh.error", null));
+        if(form.getRefresh_token() == null || !form.getRefresh_token().startsWith("Bearer ")) throw new BadRequestException(messageHandler.message("token.error", null));
         try {
             String refresh_token = form.getRefresh_token().substring("Bearer ".length());
             Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());

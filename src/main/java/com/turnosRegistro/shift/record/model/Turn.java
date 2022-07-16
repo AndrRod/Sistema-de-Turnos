@@ -13,9 +13,9 @@ import java.util.Collection;
 public class Turn {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private Collection<Reserve> reserves;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private Collection<Company> companies;
     private LocalDateTime startTurn;
     private LocalDateTime finishTurn;
