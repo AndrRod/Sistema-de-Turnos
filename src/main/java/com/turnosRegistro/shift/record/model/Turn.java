@@ -15,8 +15,9 @@ public class Turn {
     private Long id;
     @OneToMany(cascade = CascadeType.ALL)
     private Collection<Reserve> reserves;
-    @OneToMany(cascade = CascadeType.ALL)
-    private Collection<Company> companies;
+    @OneToOne
+    @JoinColumn(name = "company_id")
+    private Company company;
     private LocalDateTime startTurn;
     private LocalDateTime finishTurn;
     private Integer numberOfPlaces;

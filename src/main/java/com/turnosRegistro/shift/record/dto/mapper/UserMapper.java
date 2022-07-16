@@ -1,6 +1,7 @@
 package com.turnosRegistro.shift.record.dto.mapper;
 
-import com.turnosRegistro.shift.record.dto.UserDto;
+import com.turnosRegistro.shift.record.dto.userDtos.UserDto;
+import com.turnosRegistro.shift.record.enums.Role;
 import com.turnosRegistro.shift.record.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,7 +25,7 @@ public class UserMapper {
                 userDto.getLastName(),
                 null,
                 false,
-                null,
+                Role.CLIENT,
                 null);
     }
     public UserDto entityToDto(User user){

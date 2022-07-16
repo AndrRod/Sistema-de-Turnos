@@ -1,4 +1,4 @@
-package com.turnosRegistro.shift.record.dto;
+package com.turnosRegistro.shift.record.dto.userDtos;
 import com.turnosRegistro.shift.record.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

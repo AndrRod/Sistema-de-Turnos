@@ -1,4 +1,4 @@
-package com.turnosRegistro.shift.record.dto;
+package com.turnosRegistro.shift.record.dto.userDtos;
 
 import lombok.Data;
 

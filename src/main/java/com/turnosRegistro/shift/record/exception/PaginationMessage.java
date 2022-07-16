@@ -14,12 +14,12 @@ import java.util.List;
 public class PaginationMessage {
     @Autowired
     private MessageHandler messageHandler;
-    public MessagePagination message(Page page, List<Object> dtoPageList){
+    public MessagePagination message(Page page, List<Object> dtoPageList, HttpServletRequest request){
         List <Object> content = dtoPageList;
         String nextPath = null;
         String prevPath = null;
-        if(!page.isLast()) nextPath= "?page=" + (page.getNumber()+1);
-        if(!page.isFirst()) prevPath= "?page=" + (page.getNumber()-1);
+        if(!page.isLast()) nextPath= request.getRequestURL().toString() + "?page="+(page.getNumber()+1);
+        if(!page.isFirst()) prevPath = request.getRequestURL().toString() +"?page=" + (page.getNumber()-1);
         if(page.getContent().isEmpty()) content = Collections.singletonList(messageHandler.message("page.empty", null));
         return new MessagePagination(content, HttpStatus.OK.value(), nextPath, prevPath);
     }

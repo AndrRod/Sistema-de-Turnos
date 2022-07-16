@@ -1,4 +1,4 @@
-package com.turnosRegistro.shift.record.dto;
+package com.turnosRegistro.shift.record.dto.userDtos;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.turnosRegistro.shift.record.enums.Role;
@@ -28,6 +28,6 @@ public class UserDto {
     private String LastName;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime creationDate;
-    private Role role = Role.CLIENT;
+    private Role role;
     private Collection<Reserve> reserveFavorite;
 }

@@ -1,7 +1,7 @@
 package com.turnosRegistro.shift.record.controller;
 
-import com.turnosRegistro.shift.record.dto.AddRoleToUserForm;
-import com.turnosRegistro.shift.record.dto.UserDto;
+import com.turnosRegistro.shift.record.dto.userDtos.AddRoleToUserForm;
+import com.turnosRegistro.shift.record.dto.userDtos.UserDto;
 import com.turnosRegistro.shift.record.exception.MessageInfo;
 import com.turnosRegistro.shift.record.exception.MessagePagination;
 import com.turnosRegistro.shift.record.service.UserService;
@@ -34,12 +34,12 @@ public class UserController {
     }
     @ResponseStatus(HttpStatus.OK)
     @GetMapping
-    public MessagePagination usersPaginationByPage(@RequestParam String page){
-        return userService.findUsersDtoPagination(Integer.parseInt(page));
+    public MessagePagination usersPaginationByPage(@RequestParam String page, HttpServletRequest request){
+        return userService.findUsersDtoPagination(Integer.parseInt(page), request);
     }
     @PutMapping("/role/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public String userUpdateRole(@PathVariable String id, @RequestBody AddRoleToUserForm role, HttpServletRequest request){
-        return userService.updateUserRol(Long.valueOf(id), role.getRoleName());
+    public MessageInfo userUpdateRole(@PathVariable String id, @RequestBody AddRoleToUserForm role, HttpServletRequest request){
+        return userService.updateUserRol(Long.valueOf(id), role.getRoleName(), request);
     }
 }

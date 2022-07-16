@@ -6,9 +6,9 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.turnosRegistro.shift.record.config.MessageHandler;
-import com.turnosRegistro.shift.record.dto.RefreshTokenForm;
-import com.turnosRegistro.shift.record.dto.UserDto;
-import com.turnosRegistro.shift.record.dto.UserLoginResponse;
+import com.turnosRegistro.shift.record.dto.userDtos.RefreshTokenForm;
+import com.turnosRegistro.shift.record.dto.userDtos.UserDto;
+import com.turnosRegistro.shift.record.dto.userDtos.UserLoginResponse;
 import com.turnosRegistro.shift.record.dto.mapper.UserMapper;
 import com.turnosRegistro.shift.record.enums.Role;
 import com.turnosRegistro.shift.record.exception.*;
@@ -56,6 +56,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private PaginationMessage paginationMessage;
     @Autowired
     private AuthenticationManager authenticationManager;
+
+    private MessagePagination messagePagination;
     @Override
     public UserDto createUser(UserDto userDto) {
         return userMapper.entityToDto(userRepository.save(userMapper.entityCreateFromDto(userDto)));
@@ -84,9 +86,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public MessagePagination findUsersDtoPagination(int page) {
+    public MessagePagination findUsersDtoPagination(int page, HttpServletRequest request) {
         Page<User> userPage = userRepository.findAll(PageRequest.of(page, SIZE_PAGE));
-        return paginationMessage.message(userPage, userMapper.ListDtoFromEntities(userPage.getContent()));
+        return paginationMessage.message(userPage, userMapper.ListDtoFromEntities(userPage.getContent()), request);
     }
 
     @Override
@@ -148,15 +150,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
 
     }
-    public User findUserByEmail(String email) {
-        return Optional.ofNullable(userRepository.findByEmail(email)).orElseThrow(() -> new NotFoundException(messageHandler.message("not.found", "by email: " + email)));
-    }
-
-    @Override
-    public User findUserLogedByEmail(HttpServletRequest request) {
-        String email = emailUserLoged(request);
-        return findUserByEmail(email);
-    }
 
     @Override
     public String emailUserLoged(HttpServletRequest request) {
@@ -168,12 +161,23 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         DecodedJWT decodedJWT = verifier.verify(token);
         return decodedJWT.getSubject();
     }
-
+    public User findUserByEmail(String email) {
+        return Optional.ofNullable(userRepository.findByEmail(email)).orElseThrow(() -> new NotFoundException(messageHandler.message("not.found", "by email: " + email)));
+    }
     @Override
-    public String updateUserRol(Long idUser, String roleName) {
+    public User findUserLogedByEmail(HttpServletRequest request) {
+        String email = emailUserLoged(request);
+        return findUserByEmail(email);
+    }
+    @Override
+    public void isAuthorizate(User user, HttpServletRequest request){
+        if(!user.equals(findUserLogedByEmail(request))) throw new NotFoundException(messageHandler.message("not.authorizate", null));
+    }
+    @Override
+    public MessageInfo updateUserRol(Long idUser, String roleName, HttpServletRequest request) {
         User user = findUserEntityById(idUser);
         Try.of(() -> {user.setRole(Role.valueOf(roleName)); return null;
         }).onFailure(e -> {throw new NotFoundException(messageHandler.message("not.found", " the role: " + roleName));});
-        return messageHandler.message("update.success", null);
+        return new MessageInfo(messageHandler.message("update.success", "to role: " + roleName), HttpStatus.OK.value(), request.getRequestURL().toString());
     }
 }

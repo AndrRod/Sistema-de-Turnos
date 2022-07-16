@@ -1,8 +1,8 @@
 package com.turnosRegistro.shift.record.service;
 
-import com.turnosRegistro.shift.record.dto.RefreshTokenForm;
-import com.turnosRegistro.shift.record.dto.UserDto;
-import com.turnosRegistro.shift.record.dto.UserLoginResponse;
+import com.turnosRegistro.shift.record.dto.userDtos.RefreshTokenForm;
+import com.turnosRegistro.shift.record.dto.userDtos.UserDto;
+import com.turnosRegistro.shift.record.dto.userDtos.UserLoginResponse;
 import com.turnosRegistro.shift.record.exception.MessageInfo;
 import com.turnosRegistro.shift.record.exception.MessagePagination;
 import com.turnosRegistro.shift.record.model.User;
@@ -19,11 +19,12 @@ public interface UserService {
     User findUserEntityById(Long id);
     UserDto findUserDtoById(Long id);
     MessageInfo deleteUserById(Long id, HttpServletRequest request);
-    MessagePagination findUsersDtoPagination(int page);
+    MessagePagination findUsersDtoPagination(int page, HttpServletRequest request);
     Authentication authenticationFilter(String email, String password) throws AuthenticationException;
     UserLoginResponse userLogin(String email, String password, HttpServletRequest request);
     void refreshToken(RefreshTokenForm form, HttpServletRequest request, HttpServletResponse response) throws IOException;
     User findUserLogedByEmail(HttpServletRequest request);
     String emailUserLoged(HttpServletRequest request);
-    String updateUserRol(Long idUser, String roleName);
+    MessageInfo updateUserRol(Long idUser, String roleName, HttpServletRequest request);
+    void isAuthorizate(User users, HttpServletRequest request);
 }
