@@ -14,7 +14,7 @@ public class CompanyMapper {
         return new Company(null, null, companyDto.getName(), companyDto.getPhoneNumber(), companyDto.getDescription(), companyDto.getEmail(), companyDto.getAddress(), companyDto.getLogoImage(), companyDto.getCBU(), false, companyDto.getTurn());
     }
     public CompanyDto entityToDto(Company company){
-        return new CompanyDto(company.getId(), company.getUserCompany(), company.getName(), company.getPhoneNumber(), company.getDescription(), company.getEmail(), company.getAddress(), company.getLogoImage(), company.getCBU(), company.getTurn());
+        return new CompanyDto(company.getId(), company.getUserCompany().getEmail(), company.getName(), company.getPhoneNumber(), company.getDescription(), company.getEmail(), company.getAddress(), company.getLogoImage(), company.getCBU(), company.getTurn());
     }
     public Company entityUpdateFromDto(Company company, CompanyDto companyDto){
         Optional.of(company).stream().forEach((c)->{

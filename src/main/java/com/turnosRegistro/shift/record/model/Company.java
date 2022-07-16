@@ -23,6 +23,7 @@ public class Company {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User userCompany;
+    @Column(unique = true)
     private String name;
     @NotBlank(message = "can't be null")
     private String phoneNumber;
