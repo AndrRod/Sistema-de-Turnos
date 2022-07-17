@@ -1,8 +1,8 @@
 package com.turnosRegistro.shift.record.service;
 
-import com.turnosRegistro.shift.record.dto.userDtos.RefreshTokenForm;
-import com.turnosRegistro.shift.record.dto.userDtos.UserDto;
-import com.turnosRegistro.shift.record.dto.userDtos.UserLoginResponse;
+import com.turnosRegistro.shift.record.authFormsAndResponses.RefreshTokenForm;
+import com.turnosRegistro.shift.record.dto.UserDto;
+import com.turnosRegistro.shift.record.authFormsAndResponses.UserLoginResponse;
 import com.turnosRegistro.shift.record.exception.MessageInfo;
 import com.turnosRegistro.shift.record.exception.MessagePagination;
 import com.turnosRegistro.shift.record.model.User;

@@ -1,7 +1,7 @@
 package com.turnosRegistro.shift.record.controller;
 
-import com.turnosRegistro.shift.record.dto.userDtos.AddRoleToUserForm;
-import com.turnosRegistro.shift.record.dto.userDtos.UserDto;
+import com.turnosRegistro.shift.record.authFormsAndResponses.AddRoleToUserForm;
+import com.turnosRegistro.shift.record.dto.UserDto;
 import com.turnosRegistro.shift.record.exception.MessageInfo;
 import com.turnosRegistro.shift.record.exception.MessagePagination;
 import com.turnosRegistro.shift.record.service.UserService;

@@ -18,7 +18,7 @@ public class CompanyDto {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String userCompanyEmail;
+    private UserPartDto userCompany;
     private String name;
     @Pattern(regexp = "^(?:(?:00)?549?)?0?(?:11|[2368]\\d)(?:(?=\\d{0,2}15)\\d{2})??\\d{8}$", message = "number no valid")
     private String phoneNumber;

@@ -1,6 +1,7 @@
 package com.turnosRegistro.shift.record.dto.mapper;
 
-import com.turnosRegistro.shift.record.dto.userDtos.UserDto;
+import com.turnosRegistro.shift.record.dto.UserDto;
+import com.turnosRegistro.shift.record.dto.UserPartDto;
 import com.turnosRegistro.shift.record.enums.Role;
 import com.turnosRegistro.shift.record.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,5 +54,8 @@ public class UserMapper {
     }
     public List<Object> ListDtoFromEntities(List<User> users){
         return users.stream().map(this::entityToDto).collect(Collectors.toList());
+    }
+    public UserPartDto entityToUserPartDto(User user){
+        return new UserPartDto(user.getId(), user.getEmail());
     }
 }

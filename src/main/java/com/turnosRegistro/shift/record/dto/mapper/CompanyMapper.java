@@ -1,20 +1,25 @@
 package com.turnosRegistro.shift.record.dto.mapper;
 
 import com.turnosRegistro.shift.record.dto.CompanyDto;
+import com.turnosRegistro.shift.record.dto.CompanyPartDto;
 import com.turnosRegistro.shift.record.model.Company;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
 public class CompanyMapper {
+    @Autowired
+    private UserMapper userMapper;
     public Company createEntityFromDto(CompanyDto companyDto){
-        return new Company(null, null, companyDto.getName(), companyDto.getPhoneNumber(), companyDto.getDescription(), companyDto.getEmail(), companyDto.getAddress(), companyDto.getLogoImage(), companyDto.getCBU(), false, companyDto.getTurn());
+        return new Company(null, null, companyDto.getName(), companyDto.getPhoneNumber(), companyDto.getDescription(), companyDto.getEmail(), companyDto.getAddress(), companyDto.getLogoImage(), companyDto.getCBU(), false, new HashSet<>());
     }
     public CompanyDto entityToDto(Company company){
-        return new CompanyDto(company.getId(), company.getUserCompany().getEmail(), company.getName(), company.getPhoneNumber(), company.getDescription(), company.getEmail(), company.getAddress(), company.getLogoImage(), company.getCBU(), company.getTurn());
+        return new CompanyDto(company.getId(), userMapper.entityToUserPartDto(company.getUserCompany()), company.getName(), company.getPhoneNumber(), company.getDescription(), company.getEmail(), company.getAddress(), company.getLogoImage(), company.getCBU(), company.getTurn());
     }
     public Company entityUpdateFromDto(Company company, CompanyDto companyDto){
         Optional.of(company).stream().forEach((c)->{
@@ -32,5 +37,8 @@ public class CompanyMapper {
     }
     public List<Object> listDtoFromListEntites(List<Company> companyList){
         return companyList.stream().map(c-> entityToDto(c)).collect(Collectors.toList());
+    }
+    public CompanyPartDto entityToCompanyPartDto(Company company){
+        return new CompanyPartDto(company.getId(), company.getName());
     }
 }

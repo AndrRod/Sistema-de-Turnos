@@ -46,7 +46,6 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public Company findCompanyEntityById(Long id, HttpServletRequest request) {
         Company company = companyRepository.findById(id).orElseThrow(()-> new NotFoundException(messageHandler.message("not.found", "by id: " + id)));
-//        if(!company.getUserCompany().equals(userService.findUserLogedByEmail(request))) throw new BadRequestException(messageHandler.message("not.authorization", String.valueOf(id)));
         userService.isAuthorizate(company.getUserCompany(), request);
         return company;
     }

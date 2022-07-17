@@ -1,4 +1,4 @@
-package com.turnosRegistro.shift.record.dto.userDtos;
+package com.turnosRegistro.shift.record.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.turnosRegistro.shift.record.enums.Role;

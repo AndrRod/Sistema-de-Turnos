@@ -1,0 +1,19 @@
+package com.turnosRegistro.shift.record.service;
+
+import com.turnosRegistro.shift.record.dto.TurnDto;
+import com.turnosRegistro.shift.record.exception.MessageInfo;
+import com.turnosRegistro.shift.record.exception.MessagePagination;
+import com.turnosRegistro.shift.record.model.Turn;
+
+import javax.servlet.http.HttpServletRequest;
+
+public interface TurnService {
+    TurnDto createTurn(Long idCompany, TurnDto turnDto, HttpServletRequest request);
+    TurnDto updateTurn(Long idTurn, TurnDto turnDto, HttpServletRequest request);
+    Turn findEntityById(Long id, HttpServletRequest request);
+    TurnDto findDtoById(Long id, HttpServletRequest request);
+    MessageInfo deleteById(Long id, HttpServletRequest request);
+//    MessagePagination turnsPagination(Integer page);
+    MessagePagination turnsCompanyPage(String companyName, Integer page, HttpServletRequest request);
+
+}

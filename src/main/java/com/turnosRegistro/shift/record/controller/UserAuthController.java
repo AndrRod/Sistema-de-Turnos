@@ -1,9 +1,9 @@
 package com.turnosRegistro.shift.record.controller;
 
-import com.turnosRegistro.shift.record.dto.userDtos.RefreshTokenForm;
-import com.turnosRegistro.shift.record.dto.userDtos.UserDto;
-import com.turnosRegistro.shift.record.dto.userDtos.UserLoginForm;
-import com.turnosRegistro.shift.record.dto.userDtos.UserLoginResponse;
+import com.turnosRegistro.shift.record.authFormsAndResponses.RefreshTokenForm;
+import com.turnosRegistro.shift.record.dto.UserDto;
+import com.turnosRegistro.shift.record.authFormsAndResponses.UserLoginForm;
+import com.turnosRegistro.shift.record.authFormsAndResponses.UserLoginResponse;
 import com.turnosRegistro.shift.record.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
