@@ -13,6 +13,7 @@ import com.turnosRegistro.shift.record.model.Turn;
 public interface CompanyRepository extends JpaRepository<Company, Long> {
     @Query("SELECT c FROM Company c WHERE userCompany = :userCompany")
     Page<Company> findCompaniesByUser(@Param("userCompany") User userCompany, Pageable pageable);
-    @Query("SELECT c.turn FROM Company c WHERE name = :name")
-    Page<Turn> findTurnsByCompanyName(@Param("name") String name, Pageable pageable);
+    @Query("SELECT c.turn FROM Company c WHERE name = :companyName")
+    Page<Turn> findTurnsByCompanyName(@Param("companyName") String name, Pageable pageable);
+    Company findByName(String name);
 }

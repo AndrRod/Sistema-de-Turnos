@@ -6,9 +6,11 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.turnosRegistro.shift.record.config.MessageHandler;
-import com.turnosRegistro.shift.record.authFormsAndResponses.RefreshTokenForm;
+import com.turnosRegistro.shift.record.config.PaginationMessageHandler;
+import com.turnosRegistro.shift.record.formsAndResponses.MessagePagination;
+import com.turnosRegistro.shift.record.formsAndResponses.RefreshTokenForm;
 import com.turnosRegistro.shift.record.dto.UserDto;
-import com.turnosRegistro.shift.record.authFormsAndResponses.UserLoginResponse;
+import com.turnosRegistro.shift.record.formsAndResponses.UserLoginResponse;
 import com.turnosRegistro.shift.record.dto.mapper.UserMapper;
 import com.turnosRegistro.shift.record.enums.Role;
 import com.turnosRegistro.shift.record.exception.*;
@@ -53,7 +55,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Autowired
     private MessageHandler messageHandler;
     @Autowired
-    private PaginationMessage paginationMessage;
+    private PaginationMessageHandler paginationMessage;
     @Autowired
     private AuthenticationManager authenticationManager;
 
@@ -70,7 +72,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public User findUserEntityById(Long id) {
-        return userRepository.findById(id).orElseThrow(()-> new NotFoundException(messageHandler.message("not.found", "id: " + id)));
+        return userRepository.findById(id).orElseThrow(()-> new NotFoundException(messageHandler.message("not.found", String.valueOf(id))));
     }
 
     @Override
@@ -162,7 +164,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return decodedJWT.getSubject();
     }
     public User findUserByEmail(String email) {
-        return Optional.ofNullable(userRepository.findByEmail(email)).orElseThrow(() -> new NotFoundException(messageHandler.message("not.found", "by email: " + email)));
+        return Optional.ofNullable(userRepository.findByEmail(email)).orElseThrow(() -> new NotFoundException(messageHandler.message("not.found", email)));
     }
     @Override
     public User findUserLogedByEmail(HttpServletRequest request) {

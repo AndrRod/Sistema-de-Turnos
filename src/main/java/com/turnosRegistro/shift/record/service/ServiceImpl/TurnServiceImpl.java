@@ -4,9 +4,9 @@ import com.turnosRegistro.shift.record.config.MessageHandler;
 import com.turnosRegistro.shift.record.dto.TurnDto;
 import com.turnosRegistro.shift.record.dto.mapper.TurnMapper;
 import com.turnosRegistro.shift.record.exception.MessageInfo;
-import com.turnosRegistro.shift.record.exception.MessagePagination;
+import com.turnosRegistro.shift.record.formsAndResponses.MessagePagination;
 import com.turnosRegistro.shift.record.exception.NotFoundException;
-import com.turnosRegistro.shift.record.exception.PaginationMessage;
+import com.turnosRegistro.shift.record.config.PaginationMessageHandler;
 import com.turnosRegistro.shift.record.model.Company;
 import com.turnosRegistro.shift.record.model.Turn;
 import com.turnosRegistro.shift.record.repository.CompanyRepository;
@@ -15,7 +15,6 @@ import com.turnosRegistro.shift.record.service.CompanyService;
 import com.turnosRegistro.shift.record.service.TurnService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
@@ -34,6 +33,8 @@ public class TurnServiceImpl implements TurnService {
     private TurnMapper turnMapper;
     @Autowired
     private MessageHandler messageHandler;
+    @Autowired
+    private PaginationMessageHandler paginationMessage;
     @Override
     public TurnDto createTurn(Long idCompany, TurnDto turnDto, HttpServletRequest request) {
         Company company = companyService.findCompanyEntityById(idCompany, request);
@@ -49,7 +50,7 @@ public class TurnServiceImpl implements TurnService {
     }
     @Override
     public Turn findEntityById(Long id, HttpServletRequest request) {
-        Turn turn = turnRepository.findById(id).orElseThrow(()-> new NotFoundException(messageHandler.message("not.found", "by id: " + id)));
+        Turn turn = turnRepository.findById(id).orElseThrow(()-> new NotFoundException(messageHandler.message("not.found", String.valueOf(id))));
         companyService.findCompanyEntityById(turn.getCompany().getId(), request);
         return turn;
     }
@@ -62,12 +63,12 @@ public class TurnServiceImpl implements TurnService {
     @Override
     public MessageInfo deleteById(Long id, HttpServletRequest request) {
         turnRepository.delete(findEntityById(id, request));
-        return new MessageInfo(messageHandler.message("delete", "by id: " + id), HttpStatus.OK.value(), request.getRequestURL().toString());
+        return new MessageInfo(messageHandler.message("delete", String.valueOf(id)), HttpStatus.OK.value(), request.getRequestURL().toString());
     }
 
     @Override
     public MessagePagination turnsCompanyPage(String companyName, Integer page, HttpServletRequest request) {
         Page<Turn> turnPage = companyRepository.findTurnsByCompanyName(companyName, PageRequest.of(page, SIZE_PAGE));
-        return new PaginationMessage().message(turnPage, turnMapper.listTurnDtoFromEntityList(turnPage.getContent()), request);
+        return paginationMessage.message(turnPage, turnMapper.listTurnDtoFromEntityList(turnPage.getContent()), request);
     }
 }

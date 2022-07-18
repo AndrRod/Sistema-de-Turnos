@@ -2,7 +2,7 @@ package com.turnosRegistro.shift.record.service;
 
 import com.turnosRegistro.shift.record.dto.CompanyDto;
 import com.turnosRegistro.shift.record.exception.MessageInfo;
-import com.turnosRegistro.shift.record.exception.MessagePagination;
+import com.turnosRegistro.shift.record.formsAndResponses.MessagePagination;
 import com.turnosRegistro.shift.record.model.Company;
 
 import javax.servlet.http.HttpServletRequest;

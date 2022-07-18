@@ -14,7 +14,7 @@ public class TurnMapper {
     @Autowired
     private CompanyMapper companyMapper;
     public Turn createTurnFromDto(TurnDto turnDto){
-        return new Turn(null, null, null, turnDto.getStartTurn(), turnDto.getFinishTurn(), turnDto.getNumberOfPlaces(), null);
+        return new Turn(null, null, null, turnDto.getStartTurn(), turnDto.getFinishTurn(), turnDto.getNumberOfPlaces(), false);
     }
     public TurnDto entityToDto(Turn turn){
         return new TurnDto(turn.getId(), turn.getReserves(), companyMapper.entityToCompanyPartDto(turn.getCompany()), turn.getStartTurn(), turn.getFinishTurn(), turn.getNumberOfPlaces(), turn.getSuccessfulBooking());

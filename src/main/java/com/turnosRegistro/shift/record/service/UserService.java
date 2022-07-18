@@ -1,10 +1,10 @@
 package com.turnosRegistro.shift.record.service;
 
-import com.turnosRegistro.shift.record.authFormsAndResponses.RefreshTokenForm;
+import com.turnosRegistro.shift.record.formsAndResponses.RefreshTokenForm;
 import com.turnosRegistro.shift.record.dto.UserDto;
-import com.turnosRegistro.shift.record.authFormsAndResponses.UserLoginResponse;
+import com.turnosRegistro.shift.record.formsAndResponses.UserLoginResponse;
 import com.turnosRegistro.shift.record.exception.MessageInfo;
-import com.turnosRegistro.shift.record.exception.MessagePagination;
+import com.turnosRegistro.shift.record.formsAndResponses.MessagePagination;
 import com.turnosRegistro.shift.record.model.User;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;

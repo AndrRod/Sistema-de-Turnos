@@ -1,4 +1,4 @@
-package com.turnosRegistro.shift.record.authFormsAndResponses;
+package com.turnosRegistro.shift.record.formsAndResponses;
 import lombok.Getter;
 import lombok.Setter;
 

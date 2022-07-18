@@ -1,9 +1,11 @@
 package com.turnosRegistro.shift.record.service.ServiceImpl;
 
 import com.turnosRegistro.shift.record.config.MessageHandler;
+import com.turnosRegistro.shift.record.config.PaginationMessageHandler;
 import com.turnosRegistro.shift.record.dto.CompanyDto;
 import com.turnosRegistro.shift.record.dto.mapper.CompanyMapper;
 import com.turnosRegistro.shift.record.exception.*;
+import com.turnosRegistro.shift.record.formsAndResponses.MessagePagination;
 import com.turnosRegistro.shift.record.model.Company;
 import com.turnosRegistro.shift.record.repository.CompanyRepository;
 import com.turnosRegistro.shift.record.service.CompanyService;
@@ -29,7 +31,7 @@ public class CompanyServiceImpl implements CompanyService {
     @Autowired
     private UserService userService;
     @Autowired
-    private PaginationMessage paginationMessage;
+    private PaginationMessageHandler paginationMessage;
     @Override
     public CompanyDto createCompany(CompanyDto companyDto, HttpServletRequest request) {
         Company company = companyMapper.createEntityFromDto(companyDto);
@@ -45,7 +47,7 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public Company findCompanyEntityById(Long id, HttpServletRequest request) {
-        Company company = companyRepository.findById(id).orElseThrow(()-> new NotFoundException(messageHandler.message("not.found", "by id: " + id)));
+        Company company = companyRepository.findById(id).orElseThrow(()-> new NotFoundException(messageHandler.message("not.found", String.valueOf(id))));
         userService.isAuthorizate(company.getUserCompany(), request);
         return company;
     }
@@ -58,7 +60,7 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public MessageInfo deleteCompany(Long id, HttpServletRequest request) {
         companyRepository.delete(findCompanyEntityById(id, request));
-        return new MessageInfo(messageHandler.message("delete", "by id: " + id), HttpStatus.OK.value(), request.getRequestURL().toString());
+        return new MessageInfo(messageHandler.message("delete", String.valueOf(id)), HttpStatus.OK.value(), request.getRequestURL().toString());
     }
 
     @Override

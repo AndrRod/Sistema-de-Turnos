@@ -7,10 +7,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-
-import javax.persistence.Column;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -19,10 +18,12 @@ import java.util.Collection;
 @AllArgsConstructor
 public class UserDto {
     private Long id;
+    @NotBlank(message = "cant be null or empty")
     @Email(regexp = "^[\\w!#$%&'+/=?`{|}~^-]+(?:\\.[\\w!#$%&'+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$", message="Email format error")
     private String email;
     @Size(min = 8, message = "The password must be at least 8 characters")
     private String password;
+    @Pattern(regexp = "^(?:(?:00)?549?)?0?(?:11|[2368]\\d)(?:(?=\\d{0,2}15)\\d{2})??\\d{8}$", message = "number no valid")
     private String phoneNumber;
     private String firstName;
     private String LastName;

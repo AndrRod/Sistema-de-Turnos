@@ -1,9 +1,9 @@
 package com.turnosRegistro.shift.record.controller;
 
-import com.turnosRegistro.shift.record.authFormsAndResponses.AddRoleToUserForm;
+import com.turnosRegistro.shift.record.formsAndResponses.AddRoleToUserForm;
 import com.turnosRegistro.shift.record.dto.UserDto;
 import com.turnosRegistro.shift.record.exception.MessageInfo;
-import com.turnosRegistro.shift.record.exception.MessagePagination;
+import com.turnosRegistro.shift.record.formsAndResponses.MessagePagination;
 import com.turnosRegistro.shift.record.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

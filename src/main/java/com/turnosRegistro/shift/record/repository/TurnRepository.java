@@ -14,4 +14,6 @@ import org.springframework.stereotype.Repository;
 public interface TurnRepository extends JpaRepository<Turn, Long> {
     @Query("SELECT t FROM Turn t WHERE company = :company")
     Page<Company> findCompaniesByUser(@Param("company") Company company, Pageable pageable);
+    @Query("SELECT COUNT(t) FROM Turn t WHERE t.reserves AND t.id= :idTurn")
+    Long countReserves(@Param("idTurn")Long idTurn);
 }

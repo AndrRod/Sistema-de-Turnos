@@ -35,7 +35,7 @@ public class Company {
     @NotBlank(message = "can't be null")
     private String CBU;
     private Boolean deleted = Boolean.FALSE;
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "company", cascade = CascadeType.ALL)
     private Collection<Turn> turn = new HashSet<>();
 }
 
