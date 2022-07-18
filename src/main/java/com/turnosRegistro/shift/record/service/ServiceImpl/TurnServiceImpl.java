@@ -3,11 +3,13 @@ package com.turnosRegistro.shift.record.service.ServiceImpl;
 import com.turnosRegistro.shift.record.config.MessageHandler;
 import com.turnosRegistro.shift.record.dto.TurnDto;
 import com.turnosRegistro.shift.record.dto.mapper.TurnMapper;
+import com.turnosRegistro.shift.record.exception.BadRequestException;
 import com.turnosRegistro.shift.record.exception.MessageInfo;
 import com.turnosRegistro.shift.record.formsAndResponses.MessagePagination;
 import com.turnosRegistro.shift.record.exception.NotFoundException;
 import com.turnosRegistro.shift.record.config.PaginationMessageHandler;
 import com.turnosRegistro.shift.record.model.Company;
+import com.turnosRegistro.shift.record.model.Reserve;
 import com.turnosRegistro.shift.record.model.Turn;
 import com.turnosRegistro.shift.record.repository.CompanyRepository;
 import com.turnosRegistro.shift.record.repository.TurnRepository;
@@ -70,5 +72,13 @@ public class TurnServiceImpl implements TurnService {
     public MessagePagination turnsCompanyPage(String companyName, Integer page, HttpServletRequest request) {
         Page<Turn> turnPage = companyRepository.findTurnsByCompanyName(companyName, PageRequest.of(page, SIZE_PAGE));
         return paginationMessage.message(turnPage, turnMapper.listTurnDtoFromEntityList(turnPage.getContent()), request);
+    }
+    @Override
+    public boolean turnAvailableOnDayAndHour(Turn turn){
+        return turn.getNumberOfPlaces().equals(turn.getReserves().stream().map(Reserve::getDateTurn).count());
+    }
+    @Override
+    public boolean lastTurnOfDayAndHour(Turn turn){
+        return turn.getNumberOfPlaces().equals( 1 + turn.getReserves().stream().map(Reserve::getDateTurn).count());
     }
 }

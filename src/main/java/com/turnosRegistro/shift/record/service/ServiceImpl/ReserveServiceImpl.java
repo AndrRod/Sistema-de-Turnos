@@ -16,6 +16,7 @@ import com.turnosRegistro.shift.record.repository.ReserveRepository;
 import com.turnosRegistro.shift.record.repository.TurnRepository;
 import com.turnosRegistro.shift.record.service.CompanyService;
 import com.turnosRegistro.shift.record.service.ReserveService;
+import com.turnosRegistro.shift.record.service.TurnService;
 import com.turnosRegistro.shift.record.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -42,6 +43,8 @@ public class ReserveServiceImpl implements ReserveService {
     @Autowired
     private TurnRepository turnRepository;
     @Autowired
+    private TurnService turnService;
+    @Autowired
     private PaginationMessageHandler paginationMessageHandler;
     @Override
     public ReserveDto createReserve(ReserveCreateOrUpdateDto reserveCreateDto, HttpServletRequest request) {
@@ -53,10 +56,8 @@ public class ReserveServiceImpl implements ReserveService {
                 reserveCreateDto.getDateTurn(),
                 turn
         );
-        if(turn.getNumberOfPlaces().equals(turnRepository.countReserves(turn.getId()))) {
-//            turn.getReserves().stream().map(r-> r.getTurn().equals())
-            throw new BadRequestException("no es posible hacer reserva se agotaron");
-        }
+        if(turnService.turnAvailableOnDayAndHour(turn)) throw new BadRequestException(messageHandler.message("not.reserve", null));
+//        if(turnService.lastTurnOfDayAndHour(turn)) return null; agregar nueva entidad que registre los turnos que no estan disponibles por dia
         return reserveMapper.entityToDto(reserveRepository.save(reserve));
     }
     public Turn findTurnById(Long id){
