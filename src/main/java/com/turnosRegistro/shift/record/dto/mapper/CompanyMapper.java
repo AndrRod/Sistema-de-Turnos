@@ -15,11 +15,13 @@ import java.util.stream.Collectors;
 public class CompanyMapper {
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private TurnMapper turnMapper;
     public Company createEntityFromDto(CompanyDto companyDto){
         return new Company(null, null, companyDto.getName(), companyDto.getPhoneNumber(), companyDto.getDescription(), companyDto.getEmail(), companyDto.getAddress(), companyDto.getLogoImage(), companyDto.getCBU(), false, new HashSet<>());
     }
     public CompanyDto entityToDto(Company company){
-        return new CompanyDto(company.getId(), userMapper.entityToUserPartDto(company.getUserCompany()), company.getName(), company.getPhoneNumber(), company.getDescription(), company.getEmail(), company.getAddress(), company.getLogoImage(), company.getCBU(), company.getTurn());
+        return new CompanyDto(company.getId(), userMapper.entityToUserPartDto(company.getUserCompany()), company.getName(), company.getPhoneNumber(), company.getDescription(), company.getEmail(), company.getAddress(), company.getLogoImage(), company.getCBU(), turnMapper.listPartDtoFromEntitiesList(company.getTurn()));
     }
     public Company entityUpdateFromDto(Company company, CompanyDto companyDto){
         Optional.of(company).stream().forEach((c)->{
@@ -31,7 +33,6 @@ public class CompanyMapper {
                 if(companyDto.getCBU()!=null) c.setCBU(companyDto.getCBU());
                 if(companyDto.getLogoImage()!=null) c.setLogoImage(companyDto.getLogoImage());
                 if(companyDto.getEmail()!=null) c.setEmail(companyDto.getEmail());
-                if(companyDto.getTurn()!=null) c.setTurn(companyDto.getTurn());
         });
         return company;
     }

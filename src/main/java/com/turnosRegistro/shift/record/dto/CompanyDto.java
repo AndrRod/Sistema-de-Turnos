@@ -31,5 +31,5 @@ public class CompanyDto {
     @Size(min= 20, max = 20, message = "The cbu must have 20 characters")
     @Pattern(regexp = "[0-9]*", message = "the cbu only can include numbers")
     private String CBU;
-    private Collection<Turn> turn = new HashSet<>();
+    private Collection<TurnPartDto> turn = new HashSet<>();
 }

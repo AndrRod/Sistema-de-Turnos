@@ -1,5 +1,6 @@
 package com.turnosRegistro.shift.record.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,6 +14,7 @@ import java.util.Collection;
 public class Turn {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @JsonBackReference
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "turn")
     private Collection<Reserve> reserves;
     @ManyToOne

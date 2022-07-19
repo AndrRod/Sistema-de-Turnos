@@ -1,11 +1,14 @@
 package com.turnosRegistro.shift.record.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Data @Entity @AllArgsConstructor @NoArgsConstructor
@@ -14,16 +17,16 @@ public class Reserve {
     private Long id;
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @NotBlank(message = "can't be null")
+    @JsonManagedReference
     private User user;
     @ManyToOne
     @JoinColumn(name = "company_id")
-    @NotBlank(message = "can't be null")
+    @JsonManagedReference
     private Company company;
-    @NotBlank(message = "can't be null")
+    @Column(nullable = false)
     private LocalDate dateTurn;
+    @JsonManagedReference
     @ManyToOne
     @JoinColumn(name = "turn_id")
-    @NotBlank(message = "can't be null")
     private Turn turn;
 }

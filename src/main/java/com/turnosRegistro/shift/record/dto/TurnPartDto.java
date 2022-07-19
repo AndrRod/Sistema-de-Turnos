@@ -5,19 +5,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
 import java.time.LocalTime;
-import java.util.Collection;
 
-@Getter @Setter @AllArgsConstructor
-public class TurnDto {
+@Setter @Getter @AllArgsConstructor
+public class TurnPartDto {
     private Long id;
-    private Collection<ReservePartDto> reserves;
-    private CompanyPartDto company;
     private LocalTime startTurn;
     private LocalTime finishTurn;
     private Integer numberOfPlaces;
-    private Boolean successfulBooking;
 }

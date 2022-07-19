@@ -56,9 +56,10 @@ public class ReserveServiceImpl implements ReserveService {
                 reserveCreateDto.getDateTurn(),
                 turn
         );
-        if(turnService.turnAvailableOnDayAndHour(turn)) throw new BadRequestException(messageHandler.message("not.reserve", null));
-//        if(turnService.lastTurnOfDayAndHour(turn)) return null; agregar nueva entidad que registre los turnos que no estan disponibles por dia
+        if(turn.getNumberOfPlaces() < turn.getReserves().stream().filter(r-> r.getDateTurn().equals(reserve.getDateTurn())).count())  throw new BadRequestException(messageHandler.message("not.reserve", null));
+//      if((turn.getNumberOfPlaces() +1) < turn.getReserves().stream().filter(r-> r.getDateTurn().equals(reserve.getDateTurn())).count()) return null; agregar nueva entidad que registre los turnos que no estan disponibles por dia
         return reserveMapper.entityToDto(reserveRepository.save(reserve));
+
     }
     public Turn findTurnById(Long id){
         return turnRepository.findById(id).orElseThrow(()-> new NotFoundException(messageHandler.message("not.found", String.valueOf(id))));
@@ -69,7 +70,7 @@ public class ReserveServiceImpl implements ReserveService {
         Reserve reserve = findEntityById(idReserve, request);
         reserve.setTurn(findTurnById(reserveDto.getIdTurn()));
         reserve.setDateTurn(reserveDto.getDateTurn());
-        return null;
+        return reserveMapper.entityToDto(reserveRepository.save(reserve));
     }
 
     @Override

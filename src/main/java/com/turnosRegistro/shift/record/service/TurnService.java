@@ -14,7 +14,4 @@ public interface TurnService {
     TurnDto findDtoById(Long id, HttpServletRequest request);
     MessageInfo deleteById(Long id, HttpServletRequest request);
     MessagePagination turnsCompanyPage(String companyName, Integer page, HttpServletRequest request);
-    boolean turnAvailableOnDayAndHour(Turn turn);
-    boolean lastTurnOfDayAndHour(Turn turn);
-
 }

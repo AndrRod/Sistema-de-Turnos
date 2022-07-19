@@ -1,5 +1,6 @@
 package com.turnosRegistro.shift.record.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -35,6 +36,7 @@ public class Company {
     @NotBlank(message = "can't be null")
     private String CBU;
     private Boolean deleted = Boolean.FALSE;
+    @JsonBackReference
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "company", cascade = CascadeType.ALL)
     private Collection<Turn> turn = new HashSet<>();
 }

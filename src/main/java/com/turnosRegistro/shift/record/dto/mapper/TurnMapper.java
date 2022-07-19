@@ -1,10 +1,12 @@
 package com.turnosRegistro.shift.record.dto.mapper;
 
 import com.turnosRegistro.shift.record.dto.TurnDto;
+import com.turnosRegistro.shift.record.dto.TurnPartDto;
 import com.turnosRegistro.shift.record.model.Turn;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -13,14 +15,23 @@ import java.util.stream.Collectors;
 public class TurnMapper {
     @Autowired
     private CompanyMapper companyMapper;
+    @Autowired
+    private ReserveMapper reserveMapper;
     public Turn createTurnFromDto(TurnDto turnDto){
         return new Turn(null, null, null, turnDto.getStartTurn(), turnDto.getFinishTurn(), turnDto.getNumberOfPlaces(), false);
     }
     public TurnDto entityToDto(Turn turn){
-        return new TurnDto(turn.getId(), turn.getReserves(), companyMapper.entityToCompanyPartDto(turn.getCompany()), turn.getStartTurn(), turn.getFinishTurn(), turn.getNumberOfPlaces(), turn.getSuccessfulBooking());
+        return new TurnDto(turn.getId(), reserveMapper.listPartDtoFromListEntities(turn.getReserves()), companyMapper.entityToCompanyPartDto(turn.getCompany()), turn.getStartTurn(), turn.getFinishTurn(), turn.getNumberOfPlaces(), turn.getSuccessfulBooking());
     }
+
     public List<Object> listTurnDtoFromEntityList(List<Turn> turns){
         return turns.stream().map(this::entityToDto).collect(Collectors.toList());
+    }
+    public TurnPartDto entityToPartDto(Turn turn){
+        return new TurnPartDto(turn.getId(), turn.getStartTurn(), turn.getFinishTurn(), turn.getNumberOfPlaces());
+    }
+    public Collection<TurnPartDto> listPartDtoFromEntitiesList(Collection<Turn> turns){
+        return turns.stream().map(t-> entityToPartDto(t)).collect(Collectors.toList());
     }
     public Turn updateTurnFromDto(Turn turn, TurnDto turnDto){
         Optional.of(turn).ifPresent((t)->{

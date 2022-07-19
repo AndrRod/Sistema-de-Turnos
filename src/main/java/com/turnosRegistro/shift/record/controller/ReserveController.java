@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/reserves")
@@ -29,7 +30,7 @@ public class ReserveController {
     }
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("/{id}")
-    public ReserveDto updateReserve(@PathVariable String id, ReserveCreateOrUpdateDto reserveUpdateDto, HttpServletRequest request){
+    public ReserveDto updateReserve(@PathVariable String id, @Valid @RequestBody ReserveCreateOrUpdateDto reserveUpdateDto, HttpServletRequest request){
         return reserveService.updateReserve(Long.valueOf(id), reserveUpdateDto, request);
     }
     @ResponseStatus(HttpStatus.CREATED)

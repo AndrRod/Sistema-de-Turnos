@@ -73,12 +73,4 @@ public class TurnServiceImpl implements TurnService {
         Page<Turn> turnPage = companyRepository.findTurnsByCompanyName(companyName, PageRequest.of(page, SIZE_PAGE));
         return paginationMessage.message(turnPage, turnMapper.listTurnDtoFromEntityList(turnPage.getContent()), request);
     }
-    @Override
-    public boolean turnAvailableOnDayAndHour(Turn turn){
-        return turn.getNumberOfPlaces().equals(turn.getReserves().stream().map(Reserve::getDateTurn).count());
-    }
-    @Override
-    public boolean lastTurnOfDayAndHour(Turn turn){
-        return turn.getNumberOfPlaces().equals( 1 + turn.getReserves().stream().map(Reserve::getDateTurn).count());
-    }
 }
