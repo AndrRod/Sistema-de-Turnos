@@ -17,11 +17,13 @@ public class CompanyMapper {
     private UserMapper userMapper;
     @Autowired
     private TurnMapper turnMapper;
+    @Autowired
+    private TurnNotAviableMapper turnNotAviableMapper;
     public Company createEntityFromDto(CompanyDto companyDto){
-        return new Company(null, null, companyDto.getName(), companyDto.getPhoneNumber(), companyDto.getDescription(), companyDto.getEmail(), companyDto.getAddress(), companyDto.getLogoImage(), companyDto.getCBU(), false, new HashSet<>());
+        return new Company(null, null, companyDto.getName(), companyDto.getPhoneNumber(), companyDto.getDescription(), companyDto.getEmail(), companyDto.getAddress(), companyDto.getLogoImage(), companyDto.getCBU(), false, new HashSet<>(), new HashSet<>());
     }
     public CompanyDto entityToDto(Company company){
-        return new CompanyDto(company.getId(), userMapper.entityToUserPartDto(company.getUserCompany()), company.getName(), company.getPhoneNumber(), company.getDescription(), company.getEmail(), company.getAddress(), company.getLogoImage(), company.getCBU(), turnMapper.listPartDtoFromEntitiesList(company.getTurn()));
+        return new CompanyDto(company.getId(), userMapper.entityToUserPartDto(company.getUserCompany()), company.getName(), company.getPhoneNumber(), company.getDescription(), company.getEmail(), company.getAddress(), company.getLogoImage(), company.getCBU(), turnMapper.listPartDtoFromEntitiesList(company.getTurn()), turnNotAviableMapper.listDtoFromListEntity(company.getTurnNotAviables()));
     }
     public Company entityUpdateFromDto(Company company, CompanyDto companyDto){
         Optional.of(company).stream().forEach((c)->{

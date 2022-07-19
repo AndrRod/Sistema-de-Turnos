@@ -25,5 +25,4 @@ public class Turn {
     @Column(unique = true)
     private LocalTime finishTurn;
     private Integer numberOfPlaces;
-    private Boolean successfulBooking = Boolean.FALSE;
 }

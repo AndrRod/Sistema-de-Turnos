@@ -1,7 +1,5 @@
 package com.turnosRegistro.shift.record.dto;
 
-import com.turnosRegistro.shift.record.model.Turn;
-import com.turnosRegistro.shift.record.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,4 +30,5 @@ public class CompanyDto {
     @Pattern(regexp = "[0-9]*", message = "the cbu only can include numbers")
     private String CBU;
     private Collection<TurnPartDto> turn = new HashSet<>();
+    private Collection<TurnNotAvailableDto> turnNotAviables = new HashSet<>();
 }

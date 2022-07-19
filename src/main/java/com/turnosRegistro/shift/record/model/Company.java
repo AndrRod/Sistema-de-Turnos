@@ -10,7 +10,6 @@ import org.hibernate.annotations.Where;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 
 @Data @Entity
@@ -39,5 +38,7 @@ public class Company {
     @JsonBackReference
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "company", cascade = CascadeType.ALL)
     private Collection<Turn> turn = new HashSet<>();
+    @OneToMany(mappedBy = "company", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Collection<TurnNotAvailable> turnNotAviables = new HashSet<>();
 }
 

@@ -19,5 +19,4 @@ public class TurnDto {
     private LocalTime startTurn;
     private LocalTime finishTurn;
     private Integer numberOfPlaces;
-    private Boolean successfulBooking;
 }

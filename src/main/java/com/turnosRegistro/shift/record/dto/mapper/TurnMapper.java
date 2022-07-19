@@ -18,10 +18,10 @@ public class TurnMapper {
     @Autowired
     private ReserveMapper reserveMapper;
     public Turn createTurnFromDto(TurnDto turnDto){
-        return new Turn(null, null, null, turnDto.getStartTurn(), turnDto.getFinishTurn(), turnDto.getNumberOfPlaces(), false);
+        return new Turn(null, null, null, turnDto.getStartTurn(), turnDto.getFinishTurn(), turnDto.getNumberOfPlaces());
     }
     public TurnDto entityToDto(Turn turn){
-        return new TurnDto(turn.getId(), reserveMapper.listPartDtoFromListEntities(turn.getReserves()), companyMapper.entityToCompanyPartDto(turn.getCompany()), turn.getStartTurn(), turn.getFinishTurn(), turn.getNumberOfPlaces(), turn.getSuccessfulBooking());
+        return new TurnDto(turn.getId(), reserveMapper.listPartDtoFromListEntities(turn.getReserves()), companyMapper.entityToCompanyPartDto(turn.getCompany()), turn.getStartTurn(), turn.getFinishTurn(), turn.getNumberOfPlaces());
     }
 
     public List<Object> listTurnDtoFromEntityList(List<Turn> turns){
@@ -38,7 +38,6 @@ public class TurnMapper {
             if(turnDto.getNumberOfPlaces()!= null) t.setNumberOfPlaces(turnDto.getNumberOfPlaces());
             if(turnDto.getStartTurn()!= null) t.setStartTurn(turnDto.getStartTurn());
             if(turnDto.getFinishTurn()!=null) t.setFinishTurn((turnDto.getFinishTurn()));
-            if(turnDto.getSuccessfulBooking()!=null) t.setSuccessfulBooking(turnDto.getSuccessfulBooking());
         });
         return turn;
     }
