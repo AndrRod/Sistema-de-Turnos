@@ -25,4 +25,8 @@ El USUARIO CLIENTE tendra la posiblidad de seleccionar la empresa acorde al serv
 - 👉 Utilización de Postman, para comprobar comportamiento en cada path.
 - 
 ---------------------------
+
+PENDIENTES:
+Lo unico que faltaría es agregar super facultades al usuario COMPANY, que pueda crear reservas, modificarlas o eliminarlas.
+------------------------------
 🎁 Hecho por  [AndresRodriguez](https://www.linkedin.com/in/andres-rodriguez-60a166208/) !!!!
