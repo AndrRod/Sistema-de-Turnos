@@ -17,6 +17,7 @@ import com.turnosRegistro.shift.record.exception.*;
 import com.turnosRegistro.shift.record.model.Company;
 import com.turnosRegistro.shift.record.model.User;
 import com.turnosRegistro.shift.record.repository.UserRepository;
+import com.turnosRegistro.shift.record.service.TurnNotAvailableService;
 import com.turnosRegistro.shift.record.service.UserService;
 import io.vavr.control.Try;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +62,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private AuthenticationManager authenticationManager;
 
     private MessagePagination messagePagination;
+    @Autowired
+    private TurnNotAvailableService turnNotAvailableService;
     @Override
     public UserDto createUser(UserDto userDto) {
         return userMapper.entityToDto(userRepository.save(userMapper.entityCreateFromDto(userDto)));
@@ -84,6 +87,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public MessageInfo deleteUserById(Long id, HttpServletRequest request) {
         User user = findUserEntityById(id);
+        user.getReserveFavorite().stream().forEach(r-> turnNotAvailableService.deleteEntityByReserve(r));
         userRepository.delete(user);
         return new MessageInfo(messageHandler.message("delete", "the user: " + user.getEmail()), HttpStatus.OK.value(), request.getRequestURL().toString());
     }

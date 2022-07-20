@@ -3,7 +3,6 @@ import com.turnosRegistro.shift.record.config.MessageHandler;
 import com.turnosRegistro.shift.record.dto.TurnNotAvailableDto;
 import com.turnosRegistro.shift.record.dto.mapper.TurnNotAviableMapper;
 import com.turnosRegistro.shift.record.exception.BadRequestException;
-import com.turnosRegistro.shift.record.exception.NotFoundException;
 import com.turnosRegistro.shift.record.model.Reserve;
 import com.turnosRegistro.shift.record.model.TurnNotAvailable;
 import com.turnosRegistro.shift.record.repository.TurnNotAvailableRepository;
@@ -13,7 +12,6 @@ import io.vavr.control.Try;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.stream.Collectors;
 
 @Service

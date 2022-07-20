@@ -34,6 +34,6 @@ public class User {
     private LocalDateTime creationDate;
     private Boolean deleted = Boolean.FALSE;
     private Role role = Role.CLIENT;
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private Collection<Reserve> reserveFavorite;
 }
