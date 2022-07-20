@@ -14,6 +14,7 @@ import com.turnosRegistro.shift.record.formsAndResponses.UserLoginResponse;
 import com.turnosRegistro.shift.record.dto.mapper.UserMapper;
 import com.turnosRegistro.shift.record.enums.Role;
 import com.turnosRegistro.shift.record.exception.*;
+import com.turnosRegistro.shift.record.model.Company;
 import com.turnosRegistro.shift.record.model.User;
 import com.turnosRegistro.shift.record.repository.UserRepository;
 import com.turnosRegistro.shift.record.service.UserService;
@@ -172,8 +173,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return findUserByEmail(email);
     }
     @Override
-    public void isAuthorizate(User user, HttpServletRequest request){
-        if(!user.equals(findUserLogedByEmail(request))) throw new NotFoundException(messageHandler.message("not.authorizate", null));
+    public void isAuthorizate(User user, HttpServletRequest request, Company company){
+        User u = findUserLogedByEmail(request);
+        if(user.equals(u) || company.getUserCompany().equals(u)){ }else{ throw new NotFoundException(messageHandler.message("not.authorizate", null));}
     }
     @Override
     public MessageInfo updateUserRol(Long idUser, String roleName, HttpServletRequest request) {

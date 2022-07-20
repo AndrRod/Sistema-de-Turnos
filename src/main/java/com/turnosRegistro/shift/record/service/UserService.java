@@ -5,6 +5,7 @@ import com.turnosRegistro.shift.record.dto.UserDto;
 import com.turnosRegistro.shift.record.formsAndResponses.UserLoginResponse;
 import com.turnosRegistro.shift.record.exception.MessageInfo;
 import com.turnosRegistro.shift.record.formsAndResponses.MessagePagination;
+import com.turnosRegistro.shift.record.model.Company;
 import com.turnosRegistro.shift.record.model.User;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -26,5 +27,5 @@ public interface UserService {
     User findUserLogedByEmail(HttpServletRequest request);
     String emailUserLoged(HttpServletRequest request);
     MessageInfo updateUserRol(Long idUser, String roleName, HttpServletRequest request);
-    void isAuthorizate(User users, HttpServletRequest request);
+    void isAuthorizate(User users, HttpServletRequest request, Company company);
 }

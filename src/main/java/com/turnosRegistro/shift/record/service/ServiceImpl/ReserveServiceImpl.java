@@ -92,7 +92,7 @@ public class ReserveServiceImpl implements ReserveService {
     @Override
     public Reserve findEntityById(Long id, HttpServletRequest request) {
         Reserve reserve = reserveRepository.findById(id).orElseThrow(()-> new NotFoundException(messageHandler.message("not.found", String.valueOf(id))));
-        userService.isAuthorizate(reserve.getUser(), request);
+        userService.isAuthorizate(reserve.getUser(), request, reserve.getCompany());
         return reserve;
     }
 
