@@ -9,9 +9,6 @@ import java.util.stream.Collectors;
 
 @Component
 public class TurnNotAviableMapper {
-    public TurnNotAvailable createEntityFromDto(TurnNotAvailableDto turnNotAviableDto){
-        return new TurnNotAvailable(null, turnNotAviableDto.getDateTurn(),turnNotAviableDto.getStartTurn(), turnNotAviableDto.getFinishTurn(), null);
-    }
     public TurnNotAvailableDto entityToDto(TurnNotAvailable turnNotAviable){
         return new TurnNotAvailableDto(turnNotAviable.getId(), turnNotAviable.getDateTurn(), turnNotAviable.getStartTurn(), turnNotAviable.getFinishTurn());
     }

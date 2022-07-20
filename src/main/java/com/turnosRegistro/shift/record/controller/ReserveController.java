@@ -1,5 +1,4 @@
 package com.turnosRegistro.shift.record.controller;
-
 import com.turnosRegistro.shift.record.dto.ReserveCreateOrUpdateDto;
 import com.turnosRegistro.shift.record.dto.ReserveDto;
 import com.turnosRegistro.shift.record.exception.MessageInfo;
@@ -26,7 +25,7 @@ public class ReserveController {
     @ResponseStatus(HttpStatus.OK)
     @DeleteMapping("/{id}")
     public MessageInfo deleteById(@PathVariable String id, HttpServletRequest request){
-        return reserveService.deleteById(Long.valueOf(id), request);
+        return reserveService.deleteReserveById(Long.valueOf(id), request);
     }
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("/{id}")

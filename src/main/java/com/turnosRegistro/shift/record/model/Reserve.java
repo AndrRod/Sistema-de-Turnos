@@ -4,11 +4,8 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Data @Entity @AllArgsConstructor @NoArgsConstructor
@@ -21,7 +18,6 @@ public class Reserve {
     private User user;
     @ManyToOne
     @JoinColumn(name = "company_id")
-    @JsonManagedReference
     private Company company;
     @Column(nullable = false)
     private LocalDate dateTurn;

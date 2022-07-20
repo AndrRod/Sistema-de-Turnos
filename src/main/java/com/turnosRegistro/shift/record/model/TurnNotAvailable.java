@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
+
 @Data @Entity @AllArgsConstructor @NoArgsConstructor
 public class TurnNotAvailable {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

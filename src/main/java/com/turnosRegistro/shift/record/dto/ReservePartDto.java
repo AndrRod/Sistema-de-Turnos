@@ -14,4 +14,5 @@ public class ReservePartDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private LocalDate dateTurn;
     private TurnPartDto turn;
+    private UserPartDto user;
 }

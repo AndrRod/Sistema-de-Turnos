@@ -178,7 +178,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public MessageInfo updateUserRol(Long idUser, String roleName, HttpServletRequest request) {
         User user = findUserEntityById(idUser);
-        Try.of(() -> {user.setRole(Role.valueOf(roleName)); return null;
+        Try.of(() -> {user.setRole(Role.valueOf(roleName)); return userRepository.save(user);
         }).onFailure(e -> {throw new NotFoundException(messageHandler.message("not.found", " the role: " + roleName));});
         return new MessageInfo(messageHandler.message("update.success", "to role: " + roleName), HttpStatus.OK.value(), request.getRequestURL().toString());
     }

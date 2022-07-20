@@ -25,7 +25,7 @@ public class ReserveMapper {
         return reserveList.stream().map(this::entityToDto).collect(Collectors.toList());
     }
     public ReservePartDto entityToPartDto(Reserve reserve){
-        return new ReservePartDto(reserve.getId(), reserve.getDateTurn(), turnMapper.entityToPartDto(reserve.getTurn()));
+        return new ReservePartDto(reserve.getId(), reserve.getDateTurn(), turnMapper.entityToPartDto(reserve.getTurn()), userMapper.entityToUserPartDto(reserve.getUser()));
     }
     public Collection<ReservePartDto> listPartDtoFromListEntities(Collection<Reserve> reserveList){
         return reserveList.stream().map(this::entityToPartDto).collect(Collectors.toList());
