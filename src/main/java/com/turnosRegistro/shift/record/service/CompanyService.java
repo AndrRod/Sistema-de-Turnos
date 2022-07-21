@@ -15,4 +15,5 @@ public interface CompanyService {
     MessageInfo deleteCompany(Long id, HttpServletRequest request);
     MessagePagination findCompaniesPagination(Integer page, HttpServletRequest request);
     MessagePagination getAllUserRoleCompanyPageable(Integer page, HttpServletRequest request);
+    void deleteTurnsExpired();
 }

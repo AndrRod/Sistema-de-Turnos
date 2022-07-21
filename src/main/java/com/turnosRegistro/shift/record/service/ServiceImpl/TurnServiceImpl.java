@@ -10,6 +10,7 @@ import com.turnosRegistro.shift.record.config.PaginationMessageHandler;
 import com.turnosRegistro.shift.record.model.Company;
 import com.turnosRegistro.shift.record.model.Turn;
 import com.turnosRegistro.shift.record.repository.CompanyRepository;
+import com.turnosRegistro.shift.record.repository.ReserveRepository;
 import com.turnosRegistro.shift.record.repository.TurnRepository;
 import com.turnosRegistro.shift.record.service.CompanyService;
 import com.turnosRegistro.shift.record.service.TurnService;
@@ -19,6 +20,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class TurnServiceImpl implements TurnService {
@@ -68,7 +71,7 @@ public class TurnServiceImpl implements TurnService {
 
     @Override
     public MessagePagination turnsCompanyPage(String companyName, Integer page, HttpServletRequest request) {
-        Page<Turn> turnPage = companyRepository.findTurnsByCompanyName(companyName, PageRequest.of(page, SIZE_PAGE));
+        Page<Turn> turnPage = companyRepository.findTurnsPageByCompanyName(companyName, PageRequest.of(page, SIZE_PAGE));
         return paginationMessage.message(turnPage, turnMapper.listTurnDtoFromEntityList(turnPage.getContent()), request);
     }
 }

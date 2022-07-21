@@ -9,11 +9,18 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import com.turnosRegistro.shift.record.model.Turn;
+
+import java.util.List;
+
 @Repository
 public interface CompanyRepository extends JpaRepository<Company, Long> {
     @Query("SELECT c FROM Company c WHERE userCompany = :userCompany")
     Page<Company> findCompaniesByUser(@Param("userCompany") User userCompany, Pageable pageable);
     @Query("SELECT c.turn FROM Company c WHERE name = :companyName")
-    Page<Turn> findTurnsByCompanyName(@Param("companyName") String name, Pageable pageable);
+    Page<Turn> findTurnsPageByCompanyName(@Param("companyName") String name, Pageable pageable);
+    @Query("SELECT c.turn FROM Company c WHERE userCompany = :userCompany")
+    List<Turn> findAllTurnsByUser(@Param("userCompany") User userCompany);
+    @Query("SELECT c.turn FROM Company c")
+    List<Turn> findAllTurns();
     Company findByName(String name);
 }
