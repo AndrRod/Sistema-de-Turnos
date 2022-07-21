@@ -15,7 +15,7 @@ public class Turn {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @JsonBackReference
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "turn")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "turn", fetch = FetchType.LAZY)
     private Collection<Reserve> reserves;
     @ManyToOne
     @JoinColumn(name = "company_id")

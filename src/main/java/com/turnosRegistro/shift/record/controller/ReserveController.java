@@ -34,8 +34,8 @@ public class ReserveController {
     }
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public ReserveDto createReserve(@RequestBody ReserveCreateOrUpdateDto reserveCreateDto, HttpServletRequest request){
-        return reserveService.createReserve(reserveCreateDto, request);
+    public ReserveDto createReserve(@RequestParam Long idTurn, @RequestBody @Valid ReserveCreateOrUpdateDto reserveCreateDto, HttpServletRequest request){
+        return reserveService.createReserve(idTurn, reserveCreateDto, request);
     }
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("{page}")

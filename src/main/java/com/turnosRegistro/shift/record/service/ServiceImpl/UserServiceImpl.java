@@ -69,8 +69,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return userMapper.entityToDto(userRepository.save(userMapper.entityCreateFromDto(userDto)));
     }
     @Override
-    public UserDto updateUser(Long idUser, UserDto userDto) {
+    public UserDto updateUser(Long idUser, UserDto userDto, HttpServletRequest request) {
         User user = userMapper.updateEntityFromDto(findUserEntityById(idUser), userDto);
+        isAuthorizateOnlyUserCreatorAndRolAdmin(user, request);
         return userMapper.entityToDto(userRepository.save(user));
     }
 
@@ -87,6 +88,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public MessageInfo deleteUserById(Long id, HttpServletRequest request) {
         User user = findUserEntityById(id);
+        isAuthorizateOnlyUserCreatorAndRolAdmin(user, request);
         user.getReserveFavorite().stream().forEach(r-> turnNotAvailableService.deleteEntityByReserve(r));
         userRepository.delete(user);
         return new MessageInfo(messageHandler.message("delete", "the user: " + user.getEmail()), HttpStatus.OK.value(), request.getRequestURL().toString());
@@ -179,7 +181,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public void isAuthorizate(User user, HttpServletRequest request, Company company){
         User u = findUserLogedByEmail(request);
-        if(user.equals(u) || company.getUserCompany().equals(u)){ }else{ throw new NotFoundException(messageHandler.message("not.authorizate", null));}
+        if(!user.equals(u) && !company.getUserCompany().equals(u) && !u.getRole().equals(Role.ADMIN))throw new NotFoundException(messageHandler.message("not.authorizate", null));
+    }
+    @Override
+    public void isAuthorizateOnlyUserCreatorAndRolAdmin(User user, HttpServletRequest request){
+        User u = findUserLogedByEmail(request);
+        if(!user.equals(u) && !u.getRole().equals(Role.ADMIN))throw new NotFoundException(messageHandler.message("not.authorizate", null));
     }
     @Override
     public MessageInfo updateUserRol(Long idUser, String roleName, HttpServletRequest request) {

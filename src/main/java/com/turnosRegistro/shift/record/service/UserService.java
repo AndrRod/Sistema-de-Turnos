@@ -16,7 +16,7 @@ import java.io.IOException;
 
 public interface UserService {
     UserDto createUser(UserDto userDto);
-    UserDto updateUser(Long idUser, UserDto userDto);
+    UserDto updateUser(Long idUser, UserDto userDto, HttpServletRequest request);
     User findUserEntityById(Long id);
     UserDto findUserDtoById(Long id);
     MessageInfo deleteUserById(Long id, HttpServletRequest request);
@@ -28,4 +28,5 @@ public interface UserService {
     String emailUserLoged(HttpServletRequest request);
     MessageInfo updateUserRol(Long idUser, String roleName, HttpServletRequest request);
     void isAuthorizate(User users, HttpServletRequest request, Company company);
+    void isAuthorizateOnlyUserCreatorAndRolAdmin(User user, HttpServletRequest request);
 }

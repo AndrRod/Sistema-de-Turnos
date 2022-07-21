@@ -1,4 +1,5 @@
 package com.turnosRegistro.shift.record.config;
+import com.turnosRegistro.shift.record.config.filter.ConfigAutorizationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -7,6 +8,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @Configuration
@@ -19,11 +22,15 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable();
         http.cors();
-        http.authorizeRequests().antMatchers("/auth/login", "/auth/register").permitAll();
-//        http.authorizeRequests().anyRequest().authenticated();
-//        http.headers().frameOptions().sameOrigin();
+        http.authorizeRequests().antMatchers("/users/{id}", "/users", "/companies{page}", "/turns{page}", "/reserves", "/reserves/**", "/reserves{idTurn}").hasAnyAuthority("ROLE_CLIENT", "ROLE_COMPANY", "ROLE_ADMIN");
+        http.authorizeRequests().antMatchers("/companies", "/companies/{id}", "/turns", "/turns/{id}", "/users?page={page}").hasAnyAuthority("ROLE_COMPANY", "ROLE_ADMIN");
+        http.authorizeRequests().antMatchers("/users/role/{id}").hasAnyAuthority("ROLE_ADMIN");
+        http.authorizeRequests().antMatchers("/auth/login", "/auth/register").permitAll().
+            anyRequest().authenticated();
+
+        http.headers().frameOptions().sameOrigin();
         http.sessionManagement().sessionCreationPolicy(STATELESS);
-//        http.addFilterBefore(new ConfigAutorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new ConfigAutorizationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
     @Bean

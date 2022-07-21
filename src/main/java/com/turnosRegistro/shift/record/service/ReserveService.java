@@ -10,7 +10,7 @@ import com.turnosRegistro.shift.record.model.Turn;
 import javax.servlet.http.HttpServletRequest;
 
 public interface ReserveService {
-    ReserveDto createReserve(ReserveCreateOrUpdateDto reserveCreateDto, HttpServletRequest request);
+    ReserveDto createReserve(Long idTurn, ReserveCreateOrUpdateDto reserveCreateDto, HttpServletRequest request);
     ReserveDto updateReserve(Long idReserve, ReserveCreateOrUpdateDto reserveUpdateDto, HttpServletRequest request);
     Reserve findEntityById(Long id, HttpServletRequest request);
     ReserveDto findDtoById(Long id, HttpServletRequest request);

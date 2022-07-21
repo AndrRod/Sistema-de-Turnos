@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -27,7 +28,7 @@ public class UserMapper {
                 null,
                 false,
                 Role.CLIENT,
-                null);
+                new HashSet<>());
     }
     public UserDto entityToDto(User user){
         return new UserDto(
@@ -48,7 +49,6 @@ public class UserMapper {
             if(userDto.getEmail() !=null) u.setEmail(userDto.getEmail());
             if(userDto.getPassword() !=null) u.setPassword(passwordEncoder.encode(userDto.getPassword()));
             if(userDto.getPhoneNumber() != null) u.setPhoneNumber(userDto.getPhoneNumber());
-            if(userDto.getReserveFavorite() !=null) u.setReserveFavorite(userDto.getReserveFavorite());
         });
         return user;
     }

@@ -15,14 +15,12 @@ public class Reserve {
     private Long id;
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @JsonManagedReference
     private User user;
     @ManyToOne
     @JoinColumn(name = "company_id")
     private Company company;
     @Column(nullable = false)
     private LocalDate dateTurn;
-    @JsonManagedReference
     @ManyToOne
     @JoinColumn(name = "turn_id")
     private Turn turn;

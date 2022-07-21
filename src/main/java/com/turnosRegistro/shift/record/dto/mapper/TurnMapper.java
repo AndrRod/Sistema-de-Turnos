@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -18,7 +19,7 @@ public class TurnMapper {
     @Autowired
     private ReserveMapper reserveMapper;
     public Turn createTurnFromDto(TurnDto turnDto){
-        return new Turn(null, null, null, turnDto.getStartTurn(), turnDto.getFinishTurn(), turnDto.getNumberOfPlaces());
+        return new Turn(null, new HashSet<>(), null, turnDto.getStartTurn(), turnDto.getFinishTurn(), turnDto.getNumberOfPlaces());
     }
     public TurnDto entityToDto(Turn turn){
         return new TurnDto(turn.getId(), reserveMapper.listPartDtoFromListEntities(turn.getReserves()), companyMapper.entityToCompanyPartDto(turn.getCompany()), turn.getStartTurn(), turn.getFinishTurn(), turn.getNumberOfPlaces());

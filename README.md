@@ -25,5 +25,57 @@ El USUARIO CLIENTE tendra la posiblidad de seleccionar la empresa acorde al serv
 - 👉 Utilización de Postman, para comprobar comportamiento en cada path.
 - 
 ---------------------------
+FUNCIONALIDAD:
+
+SISTEMA DE LOGIN EN BASE A JWT (Json Web Token): El usuario una vez logeado el programa emite o produce un token, el cual esta compuesto por los datos del usuario (role e email), lo cual puede verse en la imagen seguidamente. Estos datos son recogidos en la mayoria de los paths (en los controladores a traves de HttpServletRequest) a fin de ser usuados para realizar el correspondiente filtro. 
+
+![img_2.png](img_2.png)
+
+USUARIO SE REGISTRA:Por defecto todo usuario que se registra adquiere el rol de CLIENTE.  
+
+![img.png](img.png)
+
+USUARIO ROL EMPRESA: Para adquirir el role de empresario y crear la empresa, el Usuario ADMIN tiene asignarle dicho rol
+
+![img_1.png](img_1.png)
+
+![img_3.png](img_3.png)
+
+ROLE EMPRESA: El usuario con Role Empresa, puede crear las empresas que quiera, puede realizar el CRUD correspondiente, pero solo en las empresas que haya creado:
+
+Creación Empresa (POST EXITOSO):
+
+![img_4.png](img_4.png)
+
+Eliminación Empresa (DELETE ERROR, debido a que el usuario que intenta eliminar no es el Usuario Empresa que creo la Empresa)
+
+![img_5.png](img_5.png)
+
+Eliminación Empresa (DELETE EXITOSO): Eliminada la empresa, se eliminan junto con ella las entidades relacionadas como son: Turnos y Turnos No Disponibles.
+
+![img_6.png](img_6.png)
+
+Agregado de Turnos: Se crea el turno indicando la hora de comienzo y fin del mismo y los lugares disponibles en dicho turno;
+
+![img_7.png](img_7.png)
+
+
+RESERVAS: El Usuario Cliente y Empresa puede realizar las reservas en el dia y turno previsto, siempre y cuando estén disponibles;
+
+![img_8.png](img_8.png)
+
+Turno No disponible: Si el usuario intenta crear una reserva en el dia y horario que no se encuentra disponible el programa da un aviso.
+
+![img_9.png](img_9.png)
+
+A su vez se crea un objeto de la clase TurNotAvailable, el cual registra los turnos no disponibles.
+![img_10.png](img_10.png)
+
+---------------------------------------------------
+
+PENDIENTES:
+Crear metodo que elimine las reservas y los turnos no disponibles, una vez que pase la fecha de la reserva.
+
+---------------------------------------------
 
 🎁 Hecho por  [AndresRodriguez](https://www.linkedin.com/in/andres-rodriguez-60a166208/) !!!!

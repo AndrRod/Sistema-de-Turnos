@@ -47,12 +47,14 @@ public class ReserveServiceImpl implements ReserveService {
     @Autowired
     private TurnNotAvailableService turnNotAvailableService;
     @Override
-    public ReserveDto createReserve(ReserveCreateOrUpdateDto reserveCreateDto, HttpServletRequest request) {
+    public ReserveDto createReserve(Long idTurn, ReserveCreateOrUpdateDto reserveCreateDto, HttpServletRequest request) {
+        Turn turn = turnRepository.findById(idTurn).orElseThrow(()-> new NotFoundException(messageHandler.message("not.found", String.valueOf(idTurn))));;
         Reserve reserve = new Reserve(
                 null,
                 userService.findUserLogedByEmail(request),
-                companyRepository.findByName(reserveCreateDto.getCompanyName()),
-                reserveCreateDto.getDateTurn(), findTurnById(reserveCreateDto.getIdTurn()));
+                turn.getCompany(),
+                reserveCreateDto.getDateTurn(),
+                turn);
 
         if(isTurnNotAvailable(reserve.getTurn(), reserve))  throw new BadRequestException(messageHandler.message("not.reserve", null));
         if(isTheLastTurn(reserve.getTurn(), reserve)) {

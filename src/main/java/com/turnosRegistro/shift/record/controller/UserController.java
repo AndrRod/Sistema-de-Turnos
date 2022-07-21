@@ -28,9 +28,9 @@ public class UserController {
         return userService.deleteUserById(id, request);
     }
     @ResponseStatus(HttpStatus.OK)
-    @PutMapping("/{idUser}")
-    public UserDto updateById(@PathVariable Long idUser, @RequestBody @Valid UserDto userDto){
-        return userService.updateUser(idUser, userDto);
+    @PutMapping("/{id}")
+    public UserDto updateById(@PathVariable Long id, @RequestBody @Valid UserDto userDto, HttpServletRequest request){
+        return userService.updateUser(id, userDto, request);
     }
     @ResponseStatus(HttpStatus.OK)
     @GetMapping

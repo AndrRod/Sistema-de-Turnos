@@ -1,5 +1,6 @@
 package com.turnosRegistro.shift.record.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.turnosRegistro.shift.record.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -34,6 +35,7 @@ public class User {
     private LocalDateTime creationDate;
     private Boolean deleted = Boolean.FALSE;
     private Role role = Role.CLIENT;
+    @JsonBackReference
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private Collection<Reserve> reserveFavorite;
 }
