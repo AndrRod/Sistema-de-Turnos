@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @Service
 public class ReserveServiceImpl implements ReserveService {
@@ -47,6 +48,8 @@ public class ReserveServiceImpl implements ReserveService {
     private PaginationMessageHandler paginationMessageHandler;
     @Autowired
     private TurnNotAvailableService turnNotAvailableService;
+    @Autowired
+    private EmailService emailService;
     @Override
     public ReserveDto createReserve(Long idTurn, ReserveCreateOrUpdateDto reserveCreateDto, HttpServletRequest request) {
         Turn turn = turnRepository.findById(idTurn).orElseThrow(()-> new NotFoundException(messageHandler.message("not.found", String.valueOf(idTurn))));;
@@ -62,6 +65,7 @@ public class ReserveServiceImpl implements ReserveService {
             TurnNotAvailable turnNotAvailable = new TurnNotAvailable(null, reserve.getDateTurn(), reserve.getTurn().getStartTurn(), reserve.getTurn().getFinishTurn(), reserve.getCompany());
             turnNotAvailableService.createTurnNotAvailable(turnNotAvailable);
         }
+        emailService.sendEmail(reserve.getUser().getEmail(), messageHandler.message("reserve.success.email", reserve.getDateTurn().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")) +" "+ reserve.getTurn().getStartTurn()), reserve.getCompany().getName());
         return reserveMapper.entityToDto(reserveRepository.save(reserve));
     }
     public boolean isTheLastTurn(Turn turn, Reserve reserve){

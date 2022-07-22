@@ -71,11 +71,17 @@ Turno No disponible: Si el usuario intenta crear una reserva en el dia y horario
 A su vez se crea un objeto de la clase TurNotAvailable, el cual registra los turnos no disponibles.
 ![img_10.png](img_10.png)
 
+Si se intenta crear un turno con fecha anterior al día de la fecha el programa emite un mensaje de error.
+
+![img_11.png](img_11.png)
+
+ENVIO EMAIL: Si se efectua el registro de una reserva de forma exitosa, la misma se informa con un email hacia el usuario indicando el día y la fecha de la reserva.
+![img_12.png](img_12.png)
+![img_13.png](img_13.png)
+
+
+
 ---------------------------------------------------
-
-PENDIENTES:
-emitir correo electronico que informa que el turno fue registrado con exito.
-
----------------------------------------------
+ 
 
 🎁 Hecho por  [AndresRodriguez](https://www.linkedin.com/in/andres-rodriguez-60a166208/) !!!!
