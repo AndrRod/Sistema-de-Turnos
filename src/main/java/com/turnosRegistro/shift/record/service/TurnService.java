@@ -13,5 +13,5 @@ public interface TurnService {
     Turn findEntityById(Long id, HttpServletRequest request);
     TurnDto findDtoById(Long id, HttpServletRequest request);
     MessageInfo deleteById(Long id, HttpServletRequest request);
-    MessagePagination turnsCompanyPage(String companyName, Integer page, HttpServletRequest request);
+    MessagePagination turnsCompanyPage(Long idCompany, Integer page, HttpServletRequest request);
 }

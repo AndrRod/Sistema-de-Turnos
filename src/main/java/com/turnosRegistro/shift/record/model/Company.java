@@ -30,9 +30,9 @@ public class Company {
     private String description;
     @NotBlank(message = "can't be null")
     private String email;
+    @NotBlank(message = "can't be null")
     private String address;
     private String logoImage;
-    @NotBlank(message = "can't be null")
     private String CBU;
     private Boolean deleted = Boolean.FALSE;
     @JsonBackReference

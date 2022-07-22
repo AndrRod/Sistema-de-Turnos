@@ -24,8 +24,11 @@ public class SecurityConfig {
         http.csrf().disable();
         http.cors();
         http.authorizeRequests().antMatchers("/users/{id}", "/users", "/turns{page}", "/reserves", "/reserves/**", "/reserves{idTurn}").hasAnyAuthority("ROLE_CLIENT", "ROLE_COMPANY", "ROLE_ADMIN");
-        http.authorizeRequests().antMatchers("/companies/{id}", "/turns", "/turns/{id}", "/users{page}").hasAnyAuthority("ROLE_COMPANY", "ROLE_ADMIN");
-        http.authorizeRequests().antMatchers(HttpMethod.POST, "/companies").hasAnyAuthority("ROLE_COMPANY");
+        http.authorizeRequests().antMatchers("/turns", "/turns/{id}", "/users{page}").hasAnyAuthority("ROLE_COMPANY", "ROLE_ADMIN");
+        http.authorizeRequests().antMatchers(HttpMethod.GET, "/companies/{id}").hasAnyAuthority("ROLE_CLIENT", "ROLE_COMPANY", "ROLE_ADMIN");
+        http.authorizeRequests().antMatchers(HttpMethod.DELETE, "/companies/{id}").hasAnyAuthority("ROLE_COMPANY", "ROLE_ADMIN");
+        http.authorizeRequests().antMatchers(HttpMethod.PUT, "/companies/{id}").hasAnyAuthority("ROLE_COMPANY", "ROLE_ADMIN");
+        http.authorizeRequests().antMatchers(HttpMethod.POST, "/companies").hasAnyAuthority("ROLE_COMPANY", "ROLE_ADMIN");
         http.authorizeRequests().antMatchers("/users/role/{id}").hasAnyAuthority("ROLE_ADMIN");
         http.authorizeRequests().antMatchers("/auth/login", "/auth/register", "/companies{page}").permitAll().
             anyRequest().authenticated();

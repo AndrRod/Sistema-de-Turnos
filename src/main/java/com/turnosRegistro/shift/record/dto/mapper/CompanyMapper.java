@@ -42,6 +42,6 @@ public class CompanyMapper {
         return companyList.stream().map(c-> entityToDto(c)).collect(Collectors.toList());
     }
     public CompanyPartDto entityToCompanyPartDto(Company company){
-        return new CompanyPartDto(company.getId(), company.getName());
+        return new CompanyPartDto(company.getId(), company.getName(), turnNotAviableMapper.listDtoFromListEntity(company.getTurnNotAviables()));
     }
 }

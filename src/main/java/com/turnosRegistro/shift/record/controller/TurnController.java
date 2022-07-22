@@ -37,10 +37,10 @@ public class TurnController {
     public MessageInfo deleteById(@PathVariable String id, HttpServletRequest request){
         return service.deleteById(Long.valueOf(id), request);
     }
-    @PostMapping
+    @GetMapping("/idCompany/{idCompany}")
     @ResponseStatus(HttpStatus.OK)
-    public MessagePagination turnsPaginationByCompanyName(@RequestParam String page, HttpServletRequest request, @RequestBody @Valid CompanyNameForm company){
-        return service.turnsCompanyPage(company.getCompanyName(), Integer.valueOf(page), request);
+    public MessagePagination turnsPaginationByCompanyId(@RequestParam String page, HttpServletRequest request, @PathVariable String idCompany){
+        return service.turnsCompanyPage(Long.valueOf(idCompany), Integer.valueOf(page), request);
     }
 }
 

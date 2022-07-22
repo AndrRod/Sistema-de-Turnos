@@ -3,6 +3,7 @@ package com.turnosRegistro.shift.record.service.ServiceImpl;
 import com.turnosRegistro.shift.record.config.MessageHandler;
 import com.turnosRegistro.shift.record.dto.TurnDto;
 import com.turnosRegistro.shift.record.dto.mapper.TurnMapper;
+import com.turnosRegistro.shift.record.exception.BadRequestException;
 import com.turnosRegistro.shift.record.exception.MessageInfo;
 import com.turnosRegistro.shift.record.formsAndResponses.MessagePagination;
 import com.turnosRegistro.shift.record.exception.NotFoundException;
@@ -42,6 +43,7 @@ public class TurnServiceImpl implements TurnService {
     public TurnDto createTurn(Long idCompany, TurnDto turnDto, HttpServletRequest request) {
         Company company = companyService.findCompanyEntityById(idCompany, request);
         Turn turn = turnMapper.createTurnFromDto(turnDto);
+        if(turn.getStartTurn().isAfter(turn.getFinishTurn())) throw new BadRequestException(messageHandler.message("turn.error.date", null));
         turn.setCompany(company);
         return turnMapper.entityToDto(turnRepository.save(turn));
     }
@@ -70,8 +72,8 @@ public class TurnServiceImpl implements TurnService {
     }
 
     @Override
-    public MessagePagination turnsCompanyPage(String companyName, Integer page, HttpServletRequest request) {
-        Page<Turn> turnPage = companyRepository.findTurnsPageByCompanyName(companyName, PageRequest.of(page, SIZE_PAGE));
+    public MessagePagination turnsCompanyPage(Long idCompany, Integer page, HttpServletRequest request) {
+        Page<Turn> turnPage = companyRepository.findTurnsPageByCompanyName(idCompany, PageRequest.of(page, SIZE_PAGE));
         return paginationMessage.message(turnPage, turnMapper.listTurnDtoFromEntityList(turnPage.getContent()), request);
     }
 }

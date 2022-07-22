@@ -16,11 +16,10 @@ import java.util.List;
 public interface CompanyRepository extends JpaRepository<Company, Long> {
     @Query("SELECT c FROM Company c WHERE userCompany = :userCompany")
     Page<Company> findCompaniesByUser(@Param("userCompany") User userCompany, Pageable pageable);
-    @Query("SELECT c.turn FROM Company c WHERE name = :companyName")
-    Page<Turn> findTurnsPageByCompanyName(@Param("companyName") String name, Pageable pageable);
+//    @Query("SELECT c.turn FROM Company c WHERE name = :companyName")
+//    Page<Turn> findTurnsPageByCompanyName(@Param("companyName") String name, Pageable pageable);
+    @Query("SELECT c.turn FROM Company c WHERE c.id = :idCompany")
+    Page<Turn> findTurnsPageByCompanyName(@Param("idCompany") Long idCompany, Pageable pageable);
     @Query("SELECT c.turn FROM Company c WHERE userCompany = :userCompany")
     List<Turn> findAllTurnsByUser(@Param("userCompany") User userCompany);
-    @Query("SELECT c.turn FROM Company c")
-    List<Turn> findAllTurns();
-    Company findByName(String name);
 }
