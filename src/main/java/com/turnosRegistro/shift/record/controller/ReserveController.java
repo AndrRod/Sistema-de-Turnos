@@ -35,12 +35,12 @@ public class ReserveController {
     }
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public ReserveDto createReserve(@RequestParam Long idTurn, @RequestBody @Valid ReserveCreateOrUpdateDto reserveCreateDto, HttpServletRequest request){
-        return reserveService.createReserve(idTurn, reserveCreateDto, request);
+    public ReserveDto createReserve(@RequestBody @Valid ReserveCreateOrUpdateDto reserveCreateDto, HttpServletRequest request){
+        return reserveService.createReserve(reserveCreateDto, request);
     }
     @ResponseStatus(HttpStatus.OK)
-    @PostMapping("{page}")
-    public MessagePagination getReservesPagination(@RequestBody CompanyNameForm companyNameForm, @RequestParam Integer page, HttpServletRequest request){
-        return reserveService.reservesPaginationByCompany(companyNameForm.getCompanyName(), page, request);
+    @GetMapping("/idCompany/{idCompany}")
+    public MessagePagination getReservesPagination(@PathVariable String idCompany, @RequestParam Integer page, HttpServletRequest request){
+        return reserveService.reservesPaginationByCompanyId(Long.valueOf(idCompany), page, request);
     }
 }

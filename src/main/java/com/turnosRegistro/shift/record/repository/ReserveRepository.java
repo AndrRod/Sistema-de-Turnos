@@ -10,8 +10,8 @@ import org.springframework.data.repository.query.Param;
 import java.time.LocalDate;
 
 public interface ReserveRepository extends JpaRepository<Reserve, Long> {
-    @Query("SELECT r FROM Reserve r WHERE company.name = :companyName")
-    Page<Reserve> findReserveByCompany(@Param("companyName") String companyName, Pageable pageable);
+    @Query("SELECT r FROM Reserve r WHERE company.id = :idCompany")
+    Page<Reserve> findReserveByCompanyId(@Param("idCompany") Long idCompany, Pageable pageable);
     @Modifying
     @Query("DELETE FROM Reserve r WHERE dateTurn<:date")
     void deleteReserveExpired(@Param("date") LocalDate date);

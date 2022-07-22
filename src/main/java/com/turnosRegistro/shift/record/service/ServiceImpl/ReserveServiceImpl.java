@@ -51,8 +51,8 @@ public class ReserveServiceImpl implements ReserveService {
     @Autowired
     private EmailService emailService;
     @Override
-    public ReserveDto createReserve(Long idTurn, ReserveCreateOrUpdateDto reserveCreateDto, HttpServletRequest request) {
-        Turn turn = turnRepository.findById(idTurn).orElseThrow(()-> new NotFoundException(messageHandler.message("not.found", String.valueOf(idTurn))));;
+    public ReserveDto createReserve(ReserveCreateOrUpdateDto reserveCreateDto, HttpServletRequest request) {
+        Turn turn = turnRepository.findById(reserveCreateDto.getIdTurn()).orElseThrow(()-> new NotFoundException(messageHandler.message("not.found", String.valueOf(reserveCreateDto.getIdTurn()))));;
         Reserve reserve = new Reserve(
                 null,
                 userService.findUserLogedByEmail(request),
@@ -65,7 +65,7 @@ public class ReserveServiceImpl implements ReserveService {
             TurnNotAvailable turnNotAvailable = new TurnNotAvailable(null, reserve.getDateTurn(), reserve.getTurn().getStartTurn(), reserve.getTurn().getFinishTurn(), reserve.getCompany());
             turnNotAvailableService.createTurnNotAvailable(turnNotAvailable);
         }
-        emailService.sendEmail(reserve.getUser().getEmail(), messageHandler.message("reserve.success.email", reserve.getDateTurn().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")) +" "+ reserve.getTurn().getStartTurn()), reserve.getCompany().getName());
+//        emailService.sendEmail(reserve.getUser().getEmail(), "Hello" + reserve.getUser().getFirstName() +"."+messageHandler.message("reserve.success.email", reserve.getDateTurn().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")) +" "+ reserve.getTurn().getStartTurn()), reserve.getCompany().getName());
         return reserveMapper.entityToDto(reserveRepository.save(reserve));
     }
     public boolean isTheLastTurn(Turn turn, Reserve reserve){
@@ -93,6 +93,7 @@ public class ReserveServiceImpl implements ReserveService {
             TurnNotAvailable turnNotAvailable = new TurnNotAvailable(null, reserve.getDateTurn(), reserve.getTurn().getStartTurn(), reserve.getTurn().getFinishTurn(), reserve.getCompany());
             turnNotAvailableService.createTurnNotAvailable(turnNotAvailable);
         }
+//        emailService.sendEmail(reserve.getUser().getEmail(), "Hello" + reserve.getUser().getFirstName() +"."+ messageHandler.message("reserve.update.success.email", reserve.getDateTurn().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")) +" "+ reserve.getTurn().getStartTurn()), reserve.getCompany().getName());
         return reserveMapper.entityToDto(reserveRepository.save(reserve));
     }
     void turnNotAllowed(LocalDate date){
@@ -120,8 +121,8 @@ public class ReserveServiceImpl implements ReserveService {
     }
 
     @Override
-    public MessagePagination reservesPaginationByCompany(String nameCompany, Integer page, HttpServletRequest request) {
-        Page<Reserve> reservePage = reserveRepository.findReserveByCompany(nameCompany, PageRequest.of(page, SIZE_PAGE));
+    public MessagePagination reservesPaginationByCompanyId(Long idCompany, Integer page, HttpServletRequest request) {
+        Page<Reserve> reservePage = reserveRepository.findReserveByCompanyId(idCompany, PageRequest.of(page, SIZE_PAGE));
         return paginationMessageHandler.message(reservePage, reserveMapper.listDtoFromListEntities(reservePage.getContent()), request);
     }
 }

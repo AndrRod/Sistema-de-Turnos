@@ -5,8 +5,9 @@
 ### Objetivo
 
 Proyecto API REST - El objeto del presente proyecto es desarrollar a modo de prueba un sistema de turnos.
-Donde USUARIO EMPRESA pueda crear las empresas que desee, registrar turnos disponibles y los que están siendo reservados, poder realizar un CRUD solo sobre las empresas que son dueños o han creado.
+Donde el USUARIO EMPRESA pueda crear las empresas que desee, registrar turnos disponibles y los que están siendo reservados, poder realizar un CRUD solo sobre las empresas que son dueños o han creado, crear los turnos y los lugares disponibles.
 El USUARIO CLIENTE tendra la posiblidad de seleccionar la empresa acorde al servicio que necesita, y de poder pedir una reserva, para lo cual podra realizarla dependiendo si se encuentra disponible en el día y horario señalado.
+Las Reservas serán borradas de manera automatica pasado el día de la fecha de reserva, no se podran crear reservas con fecha anterior. Realizada la Reserva se envia un correo electronico al USUARIO CLIENTE.
  
 
 
@@ -23,7 +24,8 @@ El USUARIO CLIENTE tendra la posiblidad de seleccionar la empresa acorde al serv
 - 👉 Utilización de DTOs (creación manual).
 - 👉 Soft delete en determinadas entidades (borrado logico).
 - 👉 Utilización de Postman, para comprobar comportamiento en cada path.
-- 
+
+
 ---------------------------
 FUNCIONALIDAD:
 
