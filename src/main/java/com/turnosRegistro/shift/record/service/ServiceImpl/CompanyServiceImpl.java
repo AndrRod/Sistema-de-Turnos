@@ -7,11 +7,10 @@ import com.turnosRegistro.shift.record.dto.mapper.CompanyMapper;
 import com.turnosRegistro.shift.record.exception.*;
 import com.turnosRegistro.shift.record.formsAndResponses.MessagePagination;
 import com.turnosRegistro.shift.record.model.Company;
-import com.turnosRegistro.shift.record.model.Turn;
 import com.turnosRegistro.shift.record.repository.CompanyRepository;
 import com.turnosRegistro.shift.record.repository.ReserveRepository;
+import com.turnosRegistro.shift.record.repository.TurnNotAvailableRepository;
 import com.turnosRegistro.shift.record.service.CompanyService;
-import com.turnosRegistro.shift.record.service.ReserveService;
 import com.turnosRegistro.shift.record.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,10 +19,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -41,6 +38,8 @@ public class CompanyServiceImpl implements CompanyService {
     private PaginationMessageHandler paginationMessage;
     @Autowired
     private ReserveRepository reserveRepository;
+    @Autowired
+    private TurnNotAvailableRepository turnNotAvailableRepository;
     @Override
     public CompanyDto createCompany(CompanyDto companyDto, HttpServletRequest request) {
         Company company = companyMapper.createEntityFromDto(companyDto);
@@ -71,25 +70,20 @@ public class CompanyServiceImpl implements CompanyService {
         companyRepository.delete(findCompanyEntityById(id, request));
         return new MessageInfo(messageHandler.message("delete", String.valueOf(id)), HttpStatus.OK.value(), request.getRequestURL().toString());
     }
-
+    @Transactional
     @Override
     public MessagePagination findCompaniesPagination(Integer page, HttpServletRequest request) {
-        deleteTurnsExpired();
+        reserveRepository.deleteReserveExpired(LocalDate.now());
+        turnNotAvailableRepository.deleteTurnNotAvailableExpired(LocalDate.now());
         Page<Company> companyPage = companyRepository.findAll(PageRequest.of(page, SIZE_PAGE));
         return paginationMessage.message(companyPage, companyMapper.listDtoFromListEntites(companyPage.getContent()), request);
     }
+    @Transactional
     @Override
     public MessagePagination getAllUserRoleCompanyPageable(Integer page, HttpServletRequest request) {
-        deleteTurnsExpired();
+        reserveRepository.deleteReserveExpired(LocalDate.now());
+        turnNotAvailableRepository.deleteTurnNotAvailableExpired(LocalDate.now());
         Page<Company> pageList = companyRepository.findCompaniesByUser(userService.findUserLogedByEmail(request), PageRequest.of(page, SIZE_PAGE));
         return paginationMessage.message(pageList, companyMapper.listDtoFromListEntites(pageList.getContent()), request);
-    }
-    @Override
-    public void deleteTurnsExpired(){
-        List<Turn> turns = companyRepository.findAllTurns();
-        turns.stream().forEach(t-> t.getReserves().stream().forEach((r)->{
-            System.out.println(r.getDateTurn());
-            System.out.println(r.getDateTurn().isBefore(LocalDate.now()));
-            if(r.getDateTurn().isBefore(LocalDate.now())) reserveRepository.delete(r);}));
     }
 }

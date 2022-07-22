@@ -2,6 +2,7 @@ package com.turnosRegistro.shift.record.config;
 import com.turnosRegistro.shift.record.config.filter.ConfigAutorizationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -22,12 +23,12 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable();
         http.cors();
-        http.authorizeRequests().antMatchers("/users/{id}", "/users", "/companies{page}", "/turns{page}", "/reserves", "/reserves/**", "/reserves{idTurn}").hasAnyAuthority("ROLE_CLIENT", "ROLE_COMPANY", "ROLE_ADMIN");
-        http.authorizeRequests().antMatchers("/companies", "/companies/{id}", "/turns", "/turns/{id}", "/users?page={page}").hasAnyAuthority("ROLE_COMPANY", "ROLE_ADMIN");
+        http.authorizeRequests().antMatchers("/users/{id}", "/users", "/turns{page}", "/reserves", "/reserves/**", "/reserves{idTurn}").hasAnyAuthority("ROLE_CLIENT", "ROLE_COMPANY", "ROLE_ADMIN");
+        http.authorizeRequests().antMatchers("/companies/{id}", "/turns", "/turns/{id}", "/users{page}").hasAnyAuthority("ROLE_COMPANY", "ROLE_ADMIN");
+        http.authorizeRequests().antMatchers(HttpMethod.POST, "/companies").hasAnyAuthority("ROLE_COMPANY");
         http.authorizeRequests().antMatchers("/users/role/{id}").hasAnyAuthority("ROLE_ADMIN");
-        http.authorizeRequests().antMatchers("/auth/login", "/auth/register").permitAll().
+        http.authorizeRequests().antMatchers("/auth/login", "/auth/register", "/companies{page}").permitAll().
             anyRequest().authenticated();
-
         http.headers().frameOptions().sameOrigin();
         http.sessionManagement().sessionCreationPolicy(STATELESS);
         http.addFilterBefore(new ConfigAutorizationFilter(), UsernamePasswordAuthenticationFilter.class);

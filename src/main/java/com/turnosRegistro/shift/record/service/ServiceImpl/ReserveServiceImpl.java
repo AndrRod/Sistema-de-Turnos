@@ -22,6 +22,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
 
 @Service
 public class ReserveServiceImpl implements ReserveService {
@@ -55,7 +56,7 @@ public class ReserveServiceImpl implements ReserveService {
                 turn.getCompany(),
                 reserveCreateDto.getDateTurn(),
                 turn);
-
+        turnNotAllowed(reserve.getDateTurn());
         if(isTurnNotAvailable(reserve.getTurn(), reserve))  throw new BadRequestException(messageHandler.message("not.reserve", null));
         if(isTheLastTurn(reserve.getTurn(), reserve)) {
             TurnNotAvailable turnNotAvailable = new TurnNotAvailable(null, reserve.getDateTurn(), reserve.getTurn().getStartTurn(), reserve.getTurn().getFinishTurn(), reserve.getCompany());
@@ -78,6 +79,7 @@ public class ReserveServiceImpl implements ReserveService {
     @Override
     public ReserveDto updateReserve(Long idReserve, ReserveCreateOrUpdateDto reserveDto, HttpServletRequest request) {
         Reserve reserve = findEntityById(idReserve, request);
+        turnNotAllowed(reserve.getDateTurn());
         if(isTurnNotAvailable(reserve.getTurn(), reserve)){
             turnNotAvailableService.deleteEntityByReserve(reserve);
         }
@@ -88,6 +90,9 @@ public class ReserveServiceImpl implements ReserveService {
             turnNotAvailableService.createTurnNotAvailable(turnNotAvailable);
         }
         return reserveMapper.entityToDto(reserveRepository.save(reserve));
+    }
+    void turnNotAllowed(LocalDate date){
+        if(date.isBefore(LocalDate.now())) throw new BadRequestException(messageHandler.message("date.error", String.valueOf(date)));
     }
 
     @Override

@@ -60,7 +60,7 @@ Agregado de Turnos: Se crea el turno indicando la hora de comienzo y fin del mis
 ![img_7.png](img_7.png)
 
 
-RESERVAS: El Usuario Cliente y Empresa puede realizar las reservas en el dia y turno previsto, siempre y cuando estén disponibles;
+RESERVAS: El Usuario Cliente y Empresa puede realizar las reservas en el dia y turno previsto, siempre y cuando estén disponibles. Las Reservas y turnos no disponibles son borrados de manera automatica una vez que pasa el día de la reserva.
 
 ![img_8.png](img_8.png)
 
@@ -74,7 +74,7 @@ A su vez se crea un objeto de la clase TurNotAvailable, el cual registra los tur
 ---------------------------------------------------
 
 PENDIENTES:
-Crear metodo que elimine las reservas y los turnos no disponibles, una vez que pase la fecha de la reserva.
+emitir correo electronico que informa que el turno fue registrado con exito.
 
 ---------------------------------------------
 
