@@ -1,13 +1,16 @@
 package com.turnosRegistro.shift.record.service.ServiceImpl;
 
 import com.turnosRegistro.shift.record.config.MessageHandler;
+import com.turnosRegistro.shift.record.dto.ReserveCreateOrUpdateDto;
 import com.turnosRegistro.shift.record.dto.TurnDto;
 import com.turnosRegistro.shift.record.dto.mapper.TurnMapper;
+import com.turnosRegistro.shift.record.enums.Day;
 import com.turnosRegistro.shift.record.exception.BadRequestException;
 import com.turnosRegistro.shift.record.exception.MessageInfo;
 import com.turnosRegistro.shift.record.formsAndResponses.MessagePagination;
 import com.turnosRegistro.shift.record.exception.NotFoundException;
 import com.turnosRegistro.shift.record.config.PaginationMessageHandler;
+import com.turnosRegistro.shift.record.formsAndResponses.TurnDateForm;
 import com.turnosRegistro.shift.record.model.Company;
 import com.turnosRegistro.shift.record.model.Turn;
 import com.turnosRegistro.shift.record.repository.CompanyRepository;
@@ -75,5 +78,11 @@ public class TurnServiceImpl implements TurnService {
     public MessagePagination turnsCompanyPage(Long idCompany, Integer page, HttpServletRequest request) {
         Page<Turn> turnPage = companyRepository.findTurnsPageByCompanyName(idCompany, PageRequest.of(page, SIZE_PAGE));
         return paginationMessage.message(turnPage, turnMapper.listTurnDtoFromEntityList(turnPage.getContent()), request);
+    }
+
+    @Override
+    public MessagePagination turnsPageByDay(Long idCompany, TurnDateForm turnDate, Integer page, HttpServletRequest request){
+        Page<Turn> turnPage = turnRepository.findReserveByDayName(idCompany, Day.valueOf(turnDate.getDateTurn().getDayOfWeek().toString()), PageRequest.of(page, SIZE_PAGE));
+        return paginationMessage.message(turnPage, turnMapper.turnPageToTurnsRespnonseList(turnPage.getContent()), request);
     }
 }

@@ -5,6 +5,7 @@ import com.turnosRegistro.shift.record.config.PaginationMessageHandler;
 import com.turnosRegistro.shift.record.dto.ReserveCreateOrUpdateDto;
 import com.turnosRegistro.shift.record.dto.ReserveDto;
 import com.turnosRegistro.shift.record.dto.mapper.ReserveMapper;
+import com.turnosRegistro.shift.record.enums.Day;
 import com.turnosRegistro.shift.record.exception.BadRequestException;
 import com.turnosRegistro.shift.record.exception.MessageInfo;
 import com.turnosRegistro.shift.record.exception.NotFoundException;
@@ -53,6 +54,7 @@ public class ReserveServiceImpl implements ReserveService {
     @Override
     public ReserveDto createReserve(ReserveCreateOrUpdateDto reserveCreateDto, HttpServletRequest request) {
         Turn turn = turnRepository.findById(reserveCreateDto.getIdTurn()).orElseThrow(()-> new NotFoundException(messageHandler.message("not.found", String.valueOf(reserveCreateDto.getIdTurn()))));;
+        if(!turn.getDayTurn().toString().equals(reserveCreateDto.getDateTurn().getDayOfWeek().toString())) throw new BadRequestException(messageHandler.message("reserve.error", reserveCreateDto.getDateTurn().getDayOfWeek().toString()));
         Reserve reserve = new Reserve(
                 null,
                 userService.findUserLogedByEmail(request),
@@ -62,10 +64,10 @@ public class ReserveServiceImpl implements ReserveService {
         turnNotAllowed(reserve.getDateTurn());
         if(isTurnNotAvailable(reserve.getTurn(), reserve))  throw new BadRequestException(messageHandler.message("not.reserve", null));
         if(isTheLastTurn(reserve.getTurn(), reserve)) {
-            TurnNotAvailable turnNotAvailable = new TurnNotAvailable(null, reserve.getDateTurn(), reserve.getTurn().getStartTurn(), reserve.getTurn().getFinishTurn(), reserve.getCompany());
+            TurnNotAvailable turnNotAvailable = new TurnNotAvailable(null, Day.valueOf(String.valueOf(reserve.getDateTurn().getDayOfWeek())), reserve.getDateTurn(), reserve.getTurn().getStartTurn(), reserve.getTurn().getFinishTurn(), reserve.getCompany());
             turnNotAvailableService.createTurnNotAvailable(turnNotAvailable);
         }
-        emailService.sendEmail(reserve.getUser().getEmail(), "Hello" + reserve.getUser().getFirstName() +"."+messageHandler.message("reserve.success.email", reserve.getDateTurn().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")) +" "+ reserve.getTurn().getStartTurn()), reserve.getCompany().getName());
+        emailService.sendEmail(reserve.getUser().getEmail(), "Hello " + reserve.getUser().getFirstName() +"."+messageHandler.message("reserve.success.email", reserve.getDateTurn().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")) +" "+ reserve.getTurn().getStartTurn()), reserve.getCompany().getName());
         return reserveMapper.entityToDto(reserveRepository.save(reserve));
     }
     public boolean isTheLastTurn(Turn turn, Reserve reserve){
@@ -83,6 +85,7 @@ public class ReserveServiceImpl implements ReserveService {
     @Override
     public ReserveDto updateReserve(Long idReserve, ReserveCreateOrUpdateDto reserveDto, HttpServletRequest request) {
         Reserve reserve = findEntityById(idReserve, request);
+        if(!reserve.getTurn().getDayTurn().toString().equals(reserveDto.getDateTurn().getDayOfWeek().toString())) throw new BadRequestException(messageHandler.message("reserve.error", reserveDto.getDateTurn().getDayOfWeek().toString()));
         turnNotAllowed(reserve.getDateTurn());
         if(isTurnNotAvailable(reserve.getTurn(), reserve)){
             turnNotAvailableService.deleteEntityByReserve(reserve);
@@ -90,10 +93,10 @@ public class ReserveServiceImpl implements ReserveService {
         reserve.setTurn(findTurnById(reserveDto.getIdTurn()));
         reserve.setDateTurn(reserveDto.getDateTurn());
         if(isTheLastTurn(reserve.getTurn(), reserve)) {
-            TurnNotAvailable turnNotAvailable = new TurnNotAvailable(null, reserve.getDateTurn(), reserve.getTurn().getStartTurn(), reserve.getTurn().getFinishTurn(), reserve.getCompany());
+            TurnNotAvailable turnNotAvailable = new TurnNotAvailable(null, Day.valueOf(String.valueOf(reserve.getDateTurn().getDayOfWeek())), reserve.getDateTurn(), reserve.getTurn().getStartTurn(), reserve.getTurn().getFinishTurn(), reserve.getCompany());
             turnNotAvailableService.createTurnNotAvailable(turnNotAvailable);
         }
-        emailService.sendEmail(reserve.getUser().getEmail(), "Hello" + reserve.getUser().getFirstName() +"."+ messageHandler.message("reserve.update.success.email", reserve.getDateTurn().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")) +" "+ reserve.getTurn().getStartTurn()), reserve.getCompany().getName());
+        emailService.sendEmail(reserve.getUser().getEmail(), "Hello " + reserve.getUser().getFirstName() +"."+ messageHandler.message("reserve.update.success.email", reserve.getDateTurn().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")) +" "+ reserve.getTurn().getStartTurn()), reserve.getCompany().getName());
         return reserveMapper.entityToDto(reserveRepository.save(reserve));
     }
     void turnNotAllowed(LocalDate date){

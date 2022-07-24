@@ -1,5 +1,6 @@
 package com.turnosRegistro.shift.record.model;
 
+import com.turnosRegistro.shift.record.enums.Day;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,6 +13,7 @@ import java.time.LocalTime;
 public class TurnNotAvailable {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private Day dayTurn;
     private LocalDate dateTurn;
     private LocalTime startTurn;
     private LocalTime finishTurn;

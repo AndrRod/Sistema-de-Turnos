@@ -4,6 +4,7 @@ import com.turnosRegistro.shift.record.dto.TurnDto;
 import com.turnosRegistro.shift.record.exception.MessageInfo;
 import com.turnosRegistro.shift.record.formsAndResponses.MessagePagination;
 import com.turnosRegistro.shift.record.formsAndResponses.CompanyNameForm;
+import com.turnosRegistro.shift.record.formsAndResponses.TurnDateForm;
 import com.turnosRegistro.shift.record.service.TurnService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,10 +38,15 @@ public class TurnController {
     public MessageInfo deleteById(@PathVariable String id, HttpServletRequest request){
         return service.deleteById(Long.valueOf(id), request);
     }
-    @GetMapping("/idCompany/{idCompany}")
+//    @GetMapping("/idCompany/{idCompany}")
+//    @ResponseStatus(HttpStatus.OK)
+//    public MessagePagination turnsPaginationByCompanyId(@RequestParam String page, HttpServletRequest request, @PathVariable String idCompany){
+//        return service.turnsCompanyPage(Long.valueOf(idCompany), Integer.valueOf(page), request);
+//    }
+    @PostMapping("/idCompany/{idCompany}")
     @ResponseStatus(HttpStatus.OK)
-    public MessagePagination turnsPaginationByCompanyId(@RequestParam String page, HttpServletRequest request, @PathVariable String idCompany){
-        return service.turnsCompanyPage(Long.valueOf(idCompany), Integer.valueOf(page), request);
+    public MessagePagination turnsPaginationByDay(@RequestParam String page, HttpServletRequest request, @RequestBody @Valid TurnDateForm turnDateForm, @PathVariable String idCompany){
+        return service.turnsPageByDay(Long.valueOf(idCompany), turnDateForm, Integer.valueOf(page), request);
     }
 }
 

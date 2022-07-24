@@ -30,5 +30,5 @@ public class UserDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime creationDate;
     private Role role;
-    private Collection<Reserve> reserveFavorite;
+    private Collection<ReservePartDto> reserveFavorite;
 }

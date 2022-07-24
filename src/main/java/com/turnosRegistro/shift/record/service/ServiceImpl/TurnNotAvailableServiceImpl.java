@@ -48,7 +48,8 @@ public class TurnNotAvailableServiceImpl implements TurnNotAvailableService {
         Try.of(()-> {TurnNotAvailable turnNotAvailable = repository.findAll().stream().filter(tn->
                         tn.getDateTurn().equals(reserve.getDateTurn()) &&
                         tn.getFinishTurn().equals(reserve.getTurn().getFinishTurn()) &&
-                        tn.getStartTurn().equals(reserve.getTurn().getStartTurn())).collect(Collectors.toList()).get(0);
+                        tn.getStartTurn().equals(reserve.getTurn().getStartTurn()) &&
+                        tn.getDateTurn().equals(reserve.getTurn().getDayTurn())).collect(Collectors.toList()).get(0);
                     repository.delete(turnNotAvailable);
                     return null;
                 }

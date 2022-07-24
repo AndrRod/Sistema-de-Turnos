@@ -32,6 +32,7 @@ public class Company {
     private String email;
     @NotBlank(message = "can't be null")
     private String address;
+    @NotBlank(message = "can't be null")
     private String logoImage;
     private String CBU;
     private Boolean deleted = Boolean.FALSE;

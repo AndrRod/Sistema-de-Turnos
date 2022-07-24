@@ -16,6 +16,8 @@ import java.util.stream.Collectors;
 @Component
 public class UserMapper {
     @Autowired
+    private ReserveMapper reserveMapper;
+    @Autowired
     private PasswordEncoder passwordEncoder;
     public User entityCreateFromDto(UserDto userDto){
         return new User(
@@ -40,7 +42,7 @@ public class UserMapper {
                 user.getLastName(),
                 user.getCreationDate(),
                 user.getRole(),
-                user.getReserveFavorite());
+                reserveMapper.listPartDtoFromListEntities(user.getReserveFavorite()));
     }
     public User updateEntityFromDto(User user, UserDto userDto){
         Optional.of(user).ifPresent((u)->{

@@ -25,7 +25,6 @@ public class SecurityConfig {
         http.cors();
         http.authorizeRequests().antMatchers("/users/{id}", "/users", "/turns{page}", "/reserves", "/reserves/**", "/reserves{idTurn}").hasAnyAuthority("ROLE_CLIENT", "ROLE_COMPANY", "ROLE_ADMIN");
         http.authorizeRequests().antMatchers("/turns", "/turns/{id}", "/users{page}").hasAnyAuthority("ROLE_COMPANY", "ROLE_ADMIN");
-        http.authorizeRequests().antMatchers(HttpMethod.GET, "/companies/{id}").hasAnyAuthority("ROLE_CLIENT", "ROLE_COMPANY", "ROLE_ADMIN");
         http.authorizeRequests().antMatchers(HttpMethod.DELETE, "/companies/{id}").hasAnyAuthority("ROLE_COMPANY", "ROLE_ADMIN");
         http.authorizeRequests().antMatchers(HttpMethod.PUT, "/companies/{id}").hasAnyAuthority("ROLE_COMPANY", "ROLE_ADMIN");
         http.authorizeRequests().antMatchers(HttpMethod.POST, "/companies").hasAnyAuthority("ROLE_COMPANY", "ROLE_ADMIN");
