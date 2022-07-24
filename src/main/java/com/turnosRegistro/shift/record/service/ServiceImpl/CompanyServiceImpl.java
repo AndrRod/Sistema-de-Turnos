@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
+import java.util.List;
 
 
 @Service
@@ -76,7 +77,8 @@ public class CompanyServiceImpl implements CompanyService {
         reserveRepository.deleteReserveExpired(LocalDate.now());
         turnNotAvailableRepository.deleteTurnNotAvailableExpired(LocalDate.now());
         Page<Company> companyPage = companyRepository.findAll(PageRequest.of(page, SIZE_PAGE));
-        return paginationMessage.message(companyPage, companyMapper.listDtoFromListEntites(companyPage.getContent()), request);
+        List<Object> companiesDto =  companyMapper.listDtoFromListEntites(companyPage.getContent());
+        return paginationMessage.message(companyPage, companiesDto, request);
     }
     @Transactional
     @Override

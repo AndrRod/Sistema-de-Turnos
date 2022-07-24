@@ -3,6 +3,7 @@ package com.turnosRegistro.shift.record.dto.mapper;
 import com.turnosRegistro.shift.record.dto.CompanyDto;
 import com.turnosRegistro.shift.record.dto.CompanyPartDto;
 import com.turnosRegistro.shift.record.model.Company;
+import com.turnosRegistro.shift.record.repository.TurnRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,11 +20,13 @@ public class CompanyMapper {
     private TurnMapper turnMapper;
     @Autowired
     private TurnNotAviableMapper turnNotAviableMapper;
+    @Autowired
+    private TurnRepository turnRepository;
     public Company createEntityFromDto(CompanyDto companyDto){
         return new Company(null, null, companyDto.getName(), companyDto.getPhoneNumber(), companyDto.getDescription(), companyDto.getEmail(), companyDto.getAddress(), companyDto.getLogoImage(), companyDto.getCBU(), false, new HashSet<>(), new HashSet<>());
     }
     public CompanyDto entityToDto(Company company){
-        return new CompanyDto(company.getId(), userMapper.entityToUserPartDto(company.getUserCompany()), company.getName(), company.getPhoneNumber(), company.getDescription(), company.getEmail(), company.getAddress(), company.getLogoImage(), company.getCBU(), turnMapper.listPartDtoFromEntitiesList(company.getTurn()), turnNotAviableMapper.listDtoFromListEntity(company.getTurnNotAviables()));
+        return new CompanyDto(company.getId(), userMapper.entityToUserPartDto(company.getUserCompany()), company.getName(), company.getPhoneNumber(), company.getDescription(), company.getEmail(), company.getAddress(), company.getLogoImage(), company.getCBU(), turnNotAviableMapper.listDtoFromListEntity(company.getTurnNotAviables()), turnRepository.findDaysAvailableByIdCompany(company.getId()));
     }
     public Company entityUpdateFromDto(Company company, CompanyDto companyDto){
         Optional.of(company).stream().forEach((c)->{

@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.springframework.format.annotation.DateTimeFormat;
+@CrossOrigin(origins = {"http://127.0.0.1:3000"}
+        , methods={RequestMethod.GET,RequestMethod.POST,RequestMethod.PUT,RequestMethod.DELETE}
+        ,allowCredentials = "true")
 @RestController
 @RequestMapping("/turns")
 public class TurnController {
@@ -38,11 +41,11 @@ public class TurnController {
     public MessageInfo deleteById(@PathVariable String id, HttpServletRequest request){
         return service.deleteById(Long.valueOf(id), request);
     }
-//    @GetMapping("/idCompany/{idCompany}")
-//    @ResponseStatus(HttpStatus.OK)
-//    public MessagePagination turnsPaginationByCompanyId(@RequestParam String page, HttpServletRequest request, @PathVariable String idCompany){
-//        return service.turnsCompanyPage(Long.valueOf(idCompany), Integer.valueOf(page), request);
-//    }
+    @GetMapping("/idCompanyAllTurns/{idCompany}")
+    @ResponseStatus(HttpStatus.OK)
+    public MessagePagination allTurnsPaginationByCompanyId(@RequestParam String page, HttpServletRequest request, @PathVariable String idCompany){
+        return service.turnsCompanyPage(Long.valueOf(idCompany), Integer.valueOf(page), request);
+    }
     @PostMapping("/idCompany/{idCompany}")
     @ResponseStatus(HttpStatus.OK)
     public MessagePagination turnsPaginationByDay(@RequestParam String page, HttpServletRequest request, @RequestBody @Valid TurnDateForm turnDateForm, @PathVariable String idCompany){

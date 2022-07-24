@@ -18,8 +18,9 @@ public interface CompanyRepository extends JpaRepository<Company, Long> {
     Page<Company> findCompaniesByUser(@Param("userCompany") User userCompany, Pageable pageable);
 //    @Query("SELECT c.turn FROM Company c WHERE name = :companyName")
 //    Page<Turn> findTurnsPageByCompanyName(@Param("companyName") String name, Pageable pageable);
-    @Query("SELECT c.turn FROM Company c WHERE c.id = :idCompany")
-    Page<Turn> findTurnsPageByCompanyName(@Param("idCompany") Long idCompany, Pageable pageable);
+
+//    @Query("SELECT c.turn FROM Company c WHERE c.id = :idCompany ORDER BY c.turn.dayTurn, c.turn.startTurn")
+//    Page<Turn> findTurnsPageByIdCompany(@Param("idCompany") Long idCompany, Pageable pageable);
     @Query("SELECT c.turn FROM Company c WHERE userCompany = :userCompany")
     List<Turn> findAllTurnsByUser(@Param("userCompany") User userCompany);
 }

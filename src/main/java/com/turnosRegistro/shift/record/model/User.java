@@ -29,6 +29,7 @@ public class User {
     private String password;
     @NotBlank(message = "can´t be empty or null")
     private String phoneNumber;
+    @NotBlank(message = "can´t be empty or null")
     private String firstName;
     private String LastName;
     @CreationTimestamp

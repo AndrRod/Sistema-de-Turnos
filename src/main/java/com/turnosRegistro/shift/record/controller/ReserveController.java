@@ -2,7 +2,6 @@ package com.turnosRegistro.shift.record.controller;
 import com.turnosRegistro.shift.record.dto.ReserveCreateOrUpdateDto;
 import com.turnosRegistro.shift.record.dto.ReserveDto;
 import com.turnosRegistro.shift.record.exception.MessageInfo;
-import com.turnosRegistro.shift.record.formsAndResponses.CompanyNameForm;
 import com.turnosRegistro.shift.record.formsAndResponses.MessagePagination;
 import com.turnosRegistro.shift.record.service.ReserveService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-
+@CrossOrigin(origins = {"http://127.0.0.1:3000"}
+        , methods={RequestMethod.GET,RequestMethod.POST,RequestMethod.PUT,RequestMethod.DELETE}
+        ,allowCredentials = "true")
 @RestController
 @RequestMapping("/reserves")
 public class ReserveController {

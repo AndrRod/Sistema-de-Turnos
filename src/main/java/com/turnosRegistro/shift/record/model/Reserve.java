@@ -13,14 +13,17 @@ import java.time.LocalDate;
 public class Reserve {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @JsonManagedReference
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+    @JsonManagedReference
     @ManyToOne
     @JoinColumn(name = "company_id")
     private Company company;
     @Column(nullable = false)
     private LocalDate dateTurn;
+    @JsonManagedReference
     @ManyToOne
     @JoinColumn(name = "turn_id")
     private Turn turn;

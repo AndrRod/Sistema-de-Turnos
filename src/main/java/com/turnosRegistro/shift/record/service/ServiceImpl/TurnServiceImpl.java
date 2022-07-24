@@ -1,7 +1,6 @@
 package com.turnosRegistro.shift.record.service.ServiceImpl;
 
 import com.turnosRegistro.shift.record.config.MessageHandler;
-import com.turnosRegistro.shift.record.dto.ReserveCreateOrUpdateDto;
 import com.turnosRegistro.shift.record.dto.TurnDto;
 import com.turnosRegistro.shift.record.dto.mapper.TurnMapper;
 import com.turnosRegistro.shift.record.enums.Day;
@@ -14,7 +13,6 @@ import com.turnosRegistro.shift.record.formsAndResponses.TurnDateForm;
 import com.turnosRegistro.shift.record.model.Company;
 import com.turnosRegistro.shift.record.model.Turn;
 import com.turnosRegistro.shift.record.repository.CompanyRepository;
-import com.turnosRegistro.shift.record.repository.ReserveRepository;
 import com.turnosRegistro.shift.record.repository.TurnRepository;
 import com.turnosRegistro.shift.record.service.CompanyService;
 import com.turnosRegistro.shift.record.service.TurnService;
@@ -25,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -76,8 +75,8 @@ public class TurnServiceImpl implements TurnService {
 
     @Override
     public MessagePagination turnsCompanyPage(Long idCompany, Integer page, HttpServletRequest request) {
-        Page<Turn> turnPage = companyRepository.findTurnsPageByCompanyName(idCompany, PageRequest.of(page, SIZE_PAGE));
-        return paginationMessage.message(turnPage, turnMapper.listTurnDtoFromEntityList(turnPage.getContent()), request);
+        Page<Turn> turnPage = turnRepository.findTurnPageByIdCompanyAndOrder(idCompany, PageRequest.of(page, SIZE_PAGE));
+        return paginationMessage.message(turnPage, Collections.singletonList(turnMapper.listPartDtoFromEntitiesList(turnPage.getContent())), request);
     }
 
     @Override

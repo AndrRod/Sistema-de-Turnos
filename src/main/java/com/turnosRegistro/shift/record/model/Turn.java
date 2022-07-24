@@ -22,9 +22,7 @@ public class Turn {
     @JoinColumn(name = "company_id")
     private Company company;
     private Day dayTurn;
-    @Column(unique = true)
     private LocalTime startTurn;
-    @Column(unique = true)
     private LocalTime finishTurn;
     private Integer numberOfPlaces;
 }
