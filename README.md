@@ -24,7 +24,11 @@ Las Reservas serán borradas de manera automatica pasado el día de la fecha de 
 - 👉 Utilización de DTOs (creación manual).
 - 👉 Soft delete en determinadas entidades (borrado logico).
 - 👉 Utilización de Postman, para comprobar comportamiento en cada path.
+-----------------------------
 
+FRONT END VISTA PREVIA 
+
+![img_14.png](img_14.png)
 
 ---------------------------
 FUNCIONALIDAD:

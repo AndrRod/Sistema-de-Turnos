@@ -1,5 +1,6 @@
 package com.turnosRegistro.shift.record.service;
 
+import com.turnosRegistro.shift.record.formsAndResponses.ContactEmailForm;
 import com.turnosRegistro.shift.record.formsAndResponses.RefreshTokenForm;
 import com.turnosRegistro.shift.record.dto.UserDto;
 import com.turnosRegistro.shift.record.formsAndResponses.UserLoginResponse;
@@ -29,4 +30,6 @@ public interface UserService {
     MessageInfo updateUserRol(Long idUser, String roleName, HttpServletRequest request);
     void isAuthorizate(User users, HttpServletRequest request, Company company);
     void isAuthorizateOnlyUserCreatorAndRolAdmin(User user, HttpServletRequest request);
+
+    void contactEmailFormResponse(ContactEmailForm contactEmailForm);
 }

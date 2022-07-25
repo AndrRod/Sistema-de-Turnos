@@ -51,7 +51,7 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public CompanyDto updateCompnay(Long idCompany, CompanyDto companyDto, HttpServletRequest request) {
         Company company = companyMapper.entityUpdateFromDto(findCompanyEntityById(idCompany, request), companyDto);
-        return companyMapper.entityToDto(company);
+        return companyMapper.entityToDto(companyRepository.save(company));
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.turnosRegistro.shift.record.controller;
 
+import com.turnosRegistro.shift.record.formsAndResponses.ContactEmailForm;
 import com.turnosRegistro.shift.record.formsAndResponses.RefreshTokenForm;
 import com.turnosRegistro.shift.record.dto.UserDto;
 import com.turnosRegistro.shift.record.formsAndResponses.UserLoginForm;
@@ -36,5 +37,10 @@ public class UserAuthController {
     @ResponseStatus(HttpStatus.OK)
     public void refreshToken(@RequestBody RefreshTokenForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
         userService.refreshToken(form, request, response);
+    }
+    @PostMapping("/contact")
+    @ResponseStatus(HttpStatus.OK)
+    public void refreshToken(@RequestBody ContactEmailForm contactEmailForm) {
+        userService.contactEmailFormResponse(contactEmailForm);
     }
 }

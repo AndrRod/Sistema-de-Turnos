@@ -7,6 +7,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.turnosRegistro.shift.record.config.MessageHandler;
 import com.turnosRegistro.shift.record.config.PaginationMessageHandler;
+import com.turnosRegistro.shift.record.formsAndResponses.ContactEmailForm;
 import com.turnosRegistro.shift.record.formsAndResponses.MessagePagination;
 import com.turnosRegistro.shift.record.formsAndResponses.RefreshTokenForm;
 import com.turnosRegistro.shift.record.dto.UserDto;
@@ -17,6 +18,7 @@ import com.turnosRegistro.shift.record.exception.*;
 import com.turnosRegistro.shift.record.model.Company;
 import com.turnosRegistro.shift.record.model.User;
 import com.turnosRegistro.shift.record.repository.UserRepository;
+import com.turnosRegistro.shift.record.service.EmailService;
 import com.turnosRegistro.shift.record.service.TurnNotAvailableService;
 import com.turnosRegistro.shift.record.service.UserService;
 import io.vavr.control.Try;
@@ -64,6 +66,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private MessagePagination messagePagination;
     @Autowired
     private TurnNotAvailableService turnNotAvailableService;
+    @Autowired
+    private EmailService emailService;
     @Override
     public UserDto createUser(UserDto userDto) {
         return userMapper.entityToDto(userRepository.save(userMapper.entityCreateFromDto(userDto)));
@@ -188,6 +192,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         User u = findUserLogedByEmail(request);
         if(!user.equals(u) && !u.getRole().equals(Role.ADMIN))throw new NotFoundException(messageHandler.message("not.authorizate", null));
     }
+
+    @Override
+    public void contactEmailFormResponse(ContactEmailForm contactEmailForm) {
+        emailService.sendEmail(contactEmailForm.getEmail(), "Hello " + contactEmailForm.getName() +"."+ messageHandler.message("contact.success.email", contactEmailForm.getName()), "me, Andrés Rodriguez.-");
+    }
+
     @Override
     public MessageInfo updateUserRol(Long idUser, String roleName, HttpServletRequest request) {
         User user = findUserEntityById(idUser);

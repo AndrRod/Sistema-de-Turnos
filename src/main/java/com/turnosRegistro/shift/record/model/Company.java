@@ -27,6 +27,7 @@ public class Company {
     private String name;
     @NotBlank(message = "can't be null")
     private String phoneNumber;
+    @Column(nullable = false, length = 4000)
     private String description;
     @NotBlank(message = "can't be null")
     private String email;
